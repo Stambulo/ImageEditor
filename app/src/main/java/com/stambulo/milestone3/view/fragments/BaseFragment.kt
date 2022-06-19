@@ -11,11 +11,14 @@ open class BaseFragment<Binding: ViewBinding>
     (private val inflateMethod: (LayoutInflater, ViewGroup?, Boolean) -> Binding): Fragment() {
 
     private var _binding: Binding? = null
-    val binding: Binding get() = _binding!!
+    val binding: Binding get() = _binding ?: throw NullPointerException()
+
+    open fun Binding.initialize(){}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = inflateMethod.invoke(inflater, container, false)
+        binding.initialize()
         return binding.root
     }
 
