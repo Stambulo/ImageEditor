@@ -1,42 +1,35 @@
 package com.stambulo.milestone3.view.fragments
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.util.Log
+import android.net.Uri
+import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.viewModels
+import com.stambulo.milestone3.BuildConfig
 import com.stambulo.milestone3.databinding.FragmentGalleryBinding
 import com.stambulo.milestone3.view.viewmodels.GalleryViewModel
-import com.stambulo.milestone3.view.viewmodels.util.ViewModelFactory
 
 private const val READ_EXTERNAL_STORAGE_REQUEST = 0x1045
 
 class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBinding::inflate) {
 
-    private lateinit var viewModel: GalleryViewModel
+    private val viewModel: GalleryViewModel by viewModels()
 
     override fun FragmentGalleryBinding.initialize() {
         checkPermissions()
-        setupViewModel()
         binding.openAlbum.setOnClickListener { openMediaStore() }
         binding.grantPermissionButton.setOnClickListener { openMediaStore() }
-    }
-
-    private fun setupViewModel() {
-        val activity = requireNotNull(this.activity)
-        viewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(activity.application))[GalleryViewModel::class.java]
     }
 
     private fun checkPermissions() {
         if (!haveStoragePermission()) {
             binding.welcomeView.isVisible = true
         } else {
-//            showImages()
+            showImages()
         }
     }
 
@@ -53,7 +46,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
 
     private fun openMediaStore() {
         if (haveStoragePermission()) {
-//            showImages()
+            showImages()
         } else {
             requestPermission()
         }
@@ -99,7 +92,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
                     if (showRationale) {
                         showNoAccess()
                     } else {
-//                        goToSettings()
+                        goToSettings()
                     }
                 }
                 return
@@ -107,12 +100,13 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
         }
     }
 
-//    private fun goToSettings() {
-//        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName")).apply {
-//            addCategory(Intent.CATEGORY_DEFAULT)
-//            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//        }.also { intent ->
-//            startActivity(intent)
-//        }
-//    }
+    private fun goToSettings() {
+        val packageName = BuildConfig.APPLICATION_ID
+        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName")).apply {
+            addCategory(Intent.CATEGORY_DEFAULT)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }.also { intent ->
+            startActivity(intent)
+        }
+    }
 }
