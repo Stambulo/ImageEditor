@@ -1,13 +1,13 @@
 package com.stambulo.milestone3.view.viewmodels
 
-import android.app.Application
 import android.database.ContentObserver
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.stambulo.milestone3.MediaStoreImage
 
-class GalleryViewModel(application: Application): BaseViewModel(application) {
+class GalleryViewModel(): ViewModel() {
 
     private val _images = MutableLiveData<List<MediaStoreImage>>()
     val images: LiveData<List<MediaStoreImage>> get() = _images

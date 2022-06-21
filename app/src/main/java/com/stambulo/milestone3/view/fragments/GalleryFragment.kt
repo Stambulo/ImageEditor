@@ -6,8 +6,11 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.stambulo.milestone3.databinding.FragmentGalleryBinding
 import com.stambulo.milestone3.view.viewmodels.GalleryViewModel
+import com.stambulo.milestone3.view.viewmodels.util.ViewModelFactory
 
 private const val READ_EXTERNAL_STORAGE_REQUEST = 0x1045
 
@@ -17,8 +20,13 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
 
     override fun FragmentGalleryBinding.initialize() {
         checkPermissions()
+        setupViewModel()
         binding.openAlbum.setOnClickListener { openMediaStore() }
         binding.grantPermissionButton.setOnClickListener { openMediaStore() }
+    }
+
+    private fun setupViewModel() {
+        viewModel = ViewModelProvider(this, ViewModelFactory()).get(GalleryViewModel::class.java)
     }
 
     private fun checkPermissions() {
@@ -72,16 +80,12 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        Log.i(">>>", "onRequestPermissionsResult")
         when (requestCode) {
             READ_EXTERNAL_STORAGE_REQUEST -> {
-                Log.i(">>>", "READ_EXTERNAL_STORAGE_REQUEST")
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     showImages()
-                    Log.i(">>>", "if")
                 } else {
-                    Log.i(">>>", "else")
                     // If we weren't granted the permission, check to see if we should show
                     // rationale for the permission.
                     val showRationale =
