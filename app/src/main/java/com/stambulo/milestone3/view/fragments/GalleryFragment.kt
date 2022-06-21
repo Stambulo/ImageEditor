@@ -26,7 +26,10 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
     }
 
     private fun setupViewModel() {
-        viewModel = ViewModelProvider(this, ViewModelFactory()).get(GalleryViewModel::class.java)
+        val activity = requireNotNull(this.activity)
+        viewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(activity.application))[GalleryViewModel::class.java]
     }
 
     private fun checkPermissions() {
