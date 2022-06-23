@@ -1,16 +1,28 @@
 package com.stambulo.milestone3.view.fragments
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.stambulo.milestone3.BuildConfig
+import com.stambulo.milestone3.MediaStoreImage
+import com.stambulo.milestone3.R
 import com.stambulo.milestone3.databinding.FragmentGalleryBinding
+import com.stambulo.milestone3.view.adapter.GalleryAdapter
 import com.stambulo.milestone3.view.viewmodels.GalleryViewModel
 
 private const val READ_EXTERNAL_STORAGE_REQUEST = 0x1045
@@ -18,11 +30,37 @@ private const val READ_EXTERNAL_STORAGE_REQUEST = 0x1045
 class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBinding::inflate) {
 
     private val viewModel: GalleryViewModel by viewModels()
+    private val galleryAdapter by lazy { GalleryAdapter{image -> deleteImage(image) }}
 
-    override fun FragmentGalleryBinding.initialize() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         checkPermissions()
-        binding.openAlbum.setOnClickListener { openMediaStore() }
+
+        binding.rvGallery.apply {
+            layoutManager = GridLayoutManager(activity, 3)
+            adapter = galleryAdapter
+        }
+        viewModel.images.observe(requireActivity()) { images ->
+//            galleryAdapter.submitList(images)
+            Log.i(">>>", "\nObserve images - $images")
+        }
+
+        binding.openAlbum.setOnClickListener{ openMediaStore() }
         binding.grantPermissionButton.setOnClickListener { openMediaStore() }
+//        openMediaStore()
+    }
+
+    private fun deleteImage(image: MediaStoreImage) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.delete_dialog_title)
+            .setMessage(getString(R.string.delete_dialog_message, image.displayName))
+            .setPositiveButton(R.string.delete_dialog_positive) { _: DialogInterface, _: Int ->
+                viewModel.deleteImage(image)
+            }
+            .setNegativeButton(R.string.delete_dialog_negative) { dialog: DialogInterface, _: Int ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun checkPermissions() {
@@ -45,6 +83,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
     }
 
     private fun openMediaStore() {
+        Log.i(">>>", "openMediaStore")
         if (haveStoragePermission()) {
             showImages()
         } else {

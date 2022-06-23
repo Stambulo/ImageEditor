@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragments.GalleryFragment"
-    android:background="@color/background_color_0A0A0F">
+    tools:context=".view.fragments.GalleryFragment">
+<!--    android:background="@color/background_color_0A0A0F">-->
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/top_guideline"
@@ -87,10 +87,9 @@
         android:layout_height="0dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/top_guideline"
-        tools:visibility="visible">
+        app:layout_constraintTop_toTopOf="@+id/top_guideline">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_gallery"

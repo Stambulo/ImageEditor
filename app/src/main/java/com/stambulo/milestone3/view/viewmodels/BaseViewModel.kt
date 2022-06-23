@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit
 abstract class BaseViewModel(application: Application) : AndroidViewModel(application) {
 
     suspend fun queryImages(): List<MediaStoreImage> {
+        Log.i(">>>", "queryImages")
         val images = mutableListOf<MediaStoreImage>()
 
         withContext(Dispatchers.IO) {
