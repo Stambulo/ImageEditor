@@ -21,7 +21,6 @@ class GalleryViewModel(application: Application): BaseViewModel(application) {
     private var contentObserver: ContentObserver? = null
     private var pendingDeleteImage: MediaStoreImage? = null
     private val _permissionNeededForDelete = MutableLiveData<IntentSender?>()
-    val permissionNeededForDelete: LiveData<IntentSender?> = _permissionNeededForDelete
 
     fun loadImages() {
         viewModelScope.launch {

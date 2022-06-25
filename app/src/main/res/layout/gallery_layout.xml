@@ -20,7 +20,6 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/image"
         app:layout_constraintStart_toStartOf="parent"
-        android:textColor="@color/black"
-        android:text="ZZZZZ"/>
+        android:textColor="@color/black"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

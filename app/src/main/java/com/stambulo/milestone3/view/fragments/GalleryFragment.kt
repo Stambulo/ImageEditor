@@ -7,14 +7,10 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -41,13 +37,12 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
             adapter = galleryAdapter
         }
         viewModel.images.observe(requireActivity()) { images ->
-//            galleryAdapter.submitList(images)
-            Log.i(">>>", "\nObserve images - $images")
+            galleryAdapter.submitList(images)
         }
 
         binding.openAlbum.setOnClickListener{ openMediaStore() }
         binding.grantPermissionButton.setOnClickListener { openMediaStore() }
-//        openMediaStore()
+        openMediaStore()
     }
 
     private fun deleteImage(image: MediaStoreImage) {
@@ -83,7 +78,6 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
     }
 
     private fun openMediaStore() {
-        Log.i(">>>", "openMediaStore")
         if (haveStoragePermission()) {
             showImages()
         } else {
