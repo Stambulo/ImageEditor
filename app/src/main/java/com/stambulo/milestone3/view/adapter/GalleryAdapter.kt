@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.stambulo.milestone3.MediaStoreImage
 import com.stambulo.milestone3.databinding.GalleryLayoutBinding
 
@@ -22,12 +23,19 @@ class GalleryAdapter(val onClick: (MediaStoreImage) -> Unit) :
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val mediaStoreImage = getItem(position)
         holder.bind(mediaStoreImage)
+
+        Glide.with(holder.imageView)
+            .load(mediaStoreImage.contentUri)
+            .thumbnail(0.33f)
+            .centerCrop()
+            .into(holder.imageView)
     }
 
     inner class ImageViewHolder(
         val binding: GalleryLayoutBinding, onClick: (MediaStoreImage) -> Unit
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
+    ): RecyclerView.ViewHolder(binding.root) {
+        val imageView = binding.image
+
         fun bind(imageList: MediaStoreImage) {
             binding.galleryTextItem.text = imageList.displayName
         }
