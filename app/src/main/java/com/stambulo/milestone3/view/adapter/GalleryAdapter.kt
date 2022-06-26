@@ -36,8 +36,6 @@ class GalleryAdapter(val onClick: (MediaStoreImage) -> Unit) :
     ): RecyclerView.ViewHolder(binding.root) {
         val imageView = binding.image
 
-        fun bind(imageList: MediaStoreImage) {
-            binding.galleryTextItem.text = imageList.displayName
-        }
+        fun bind(imageList: MediaStoreImage) {}
     }
 }

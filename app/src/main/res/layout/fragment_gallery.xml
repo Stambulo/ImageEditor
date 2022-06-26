@@ -5,8 +5,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragments.GalleryFragment">
-<!--    android:background="@color/background_color_0A0A0F">-->
+    tools:context=".view.fragments.GalleryFragment"
+    android:background="@color/background_color_0A0A0F">
+
+    <TextView
+        android:id="@+id/gallery_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:text="@string/gallery"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_24ssp"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/top_guideline"
@@ -87,15 +99,31 @@
         android:layout_height="0dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="@+id/top_guideline">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_gallery"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/_4sdp"/>
 
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:backgroundTint="@color/fab_2C8AF1"
+        app:tint="@android:color/white"
+        android:layout_gravity="end|bottom"
+        app:srcCompat="@drawable/ic_camera"
+        app:maxImageSize="@dimen/_30sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_38sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

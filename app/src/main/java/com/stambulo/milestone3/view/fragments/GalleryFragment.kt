@@ -31,18 +31,23 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkPermissions()
+        setViewModel()
+        setViews()
+    }
 
-        binding.rvGallery.apply {
-            layoutManager = GridLayoutManager(activity, 3)
-            adapter = galleryAdapter
-        }
+    private fun setViewModel() {
         viewModel.images.observe(requireActivity()) { images ->
             galleryAdapter.submitList(images)
         }
+    }
 
+    private fun setViews() {
+        binding.rvGallery.apply {
+            layoutManager = GridLayoutManager(activity, 4)
+            adapter = galleryAdapter
+        }
         binding.openAlbum.setOnClickListener{ openMediaStore() }
         binding.grantPermissionButton.setOnClickListener { openMediaStore() }
-        openMediaStore()
     }
 
     private fun deleteImage(image: MediaStoreImage) {
@@ -70,6 +75,8 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
         viewModel.loadImages()
         binding.welcomeView.isVisible = false
         binding.permissionRationaleView.isVisible = false
+        binding.recyclerView.isVisible = true
+        binding.fab.isVisible = true
     }
 
     private fun showNoAccess() {
