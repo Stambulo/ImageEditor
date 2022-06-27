@@ -9,7 +9,7 @@ import android.provider.MediaStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.stambulo.milestone3.MediaStoreImage
+import com.stambulo.milestone3.data.MediaStoreImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

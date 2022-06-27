@@ -1,4 +1,4 @@
-package com.stambulo.milestone3
+package com.stambulo.milestone3.data
 
 import android.net.Uri
 import androidx.recyclerview.widget.DiffUtil

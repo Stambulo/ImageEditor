@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.stambulo.milestone3.MediaStoreImage
+import com.stambulo.milestone3.data.MediaStoreImage
 import com.stambulo.milestone3.databinding.GalleryLayoutBinding
 
 class GalleryAdapter(val onClick: (MediaStoreImage) -> Unit) :
