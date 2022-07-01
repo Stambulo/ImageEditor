@@ -6,15 +6,22 @@ import android.content.IntentSender
 import android.database.ContentObserver
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.stambulo.milestone3.data.MediaStoreImage
+import com.stambulo.milestone3.di.DaggerAppComponent
+import com.stambulo.milestone3.di.Info
+import com.stambulo.milestone3.repository.MediaStoreRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class GalleryViewModel(application: Application): BaseViewModel(application) {
+class GalleryViewModel @Inject constructor(application: Application): BaseViewModel(application) {
+
+    @Inject lateinit var info: Info
 
     private val _images = MutableLiveData<List<MediaStoreImage>>()
     val images: LiveData<List<MediaStoreImage>> get() = _images
@@ -22,7 +29,12 @@ class GalleryViewModel(application: Application): BaseViewModel(application) {
     private var pendingDeleteImage: MediaStoreImage? = null
     private val _permissionNeededForDelete = MutableLiveData<IntentSender?>()
 
+    init {
+        DaggerAppComponent.builder().build().inject(this)
+    }
+
     fun loadImages() {
+        Log.i(">>>", "loadImages - ${info.text}")
         viewModelScope.launch {
             val imageList = queryImages()
             _images.postValue(imageList)
