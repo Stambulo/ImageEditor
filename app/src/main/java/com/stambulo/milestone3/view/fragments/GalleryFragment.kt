@@ -20,6 +20,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.stambulo.milestone3.BuildConfig
@@ -28,6 +29,7 @@ import com.stambulo.milestone3.R
 import com.stambulo.milestone3.databinding.FragmentGalleryBinding
 import com.stambulo.milestone3.view.adapter.GalleryAdapter
 import com.stambulo.milestone3.view.viewmodels.GalleryViewModel
+import kotlinx.coroutines.flow.collectLatest
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -47,8 +49,11 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
     }
 
     private fun setViewModel() {
-        viewModel.images.observe(requireActivity()) { images ->
-            galleryAdapter.submitList(images)
+        Log.i(">>>2", "Adapter")
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            viewModel.imagesWithPaging3.collectLatest{
+                galleryAdapter.submitData(it)
+            }
         }
     }
 
@@ -189,7 +194,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
     }
 
     private fun showImages() {
-        viewModel.loadImages()
+//        viewModel.loadImages()
         binding.welcomeView.isVisible = false
         binding.permissionRationaleView.isVisible = false
         binding.recyclerView.isVisible = true

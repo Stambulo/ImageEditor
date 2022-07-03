@@ -3,15 +3,15 @@ package com.stambulo.milestone3.view.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.stambulo.milestone3.data.MediaStoreImage
 import com.stambulo.milestone3.databinding.GalleryLayoutBinding
 
 class GalleryAdapter(val onClick: (MediaStoreImage) -> Unit) :
-    ListAdapter<MediaStoreImage, GalleryAdapter.ImageViewHolder>(MediaStoreCallBack()) {
+    PagingDataAdapter<MediaStoreImage, GalleryAdapter.ImageViewHolder>(MediaStoreCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val view = GalleryLayoutBinding.inflate(
@@ -24,10 +24,9 @@ class GalleryAdapter(val onClick: (MediaStoreImage) -> Unit) :
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val mediaStoreImage = getItem(position)
-        holder.bind(mediaStoreImage)
 
         Glide.with(holder.imageView)
-            .load(mediaStoreImage.contentUri)
+            .load(mediaStoreImage?.contentUri)
             .thumbnail(0.33f)
             .centerCrop()
             .into(holder.imageView)
@@ -42,7 +41,7 @@ class GalleryAdapter(val onClick: (MediaStoreImage) -> Unit) :
             super.onBindViewHolder(holder, position, payloads)
         } else {
             if (payloads[0] == true){
-                holder.bindState(getItem(position).isChecked)
+                getItem(position)?.let { holder.bindState(it.isChecked) }
             }
         }
     }
