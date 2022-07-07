@@ -7,8 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
-open class BaseFragment<Binding: ViewBinding>
-    (private val inflateMethod: (LayoutInflater, ViewGroup?, Boolean) -> Binding): Fragment() {
+//TODO: format class headers with long constructors like this
+//TODO: base class should be abstract, not open (instance of this class does not make sense)
+open class BaseFragment<Binding: ViewBinding>(
+    //TODO: should not use lambda, use abstract function instead
+    private val inflateMethod: (LayoutInflater, ViewGroup?, Boolean) -> Binding
+): Fragment() {
 
     private var _binding: Binding? = null
     val binding: Binding get() = _binding ?: throw NullPointerException()

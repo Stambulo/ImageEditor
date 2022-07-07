@@ -17,8 +17,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+//TODO: better to use ViewModel class as a base class
+//TODO: base viewModel should not contains or implements logical functions
 abstract class BaseViewModel(application: Application) : AndroidViewModel(application) {
 
+    //TODO: should be moved to repository
     suspend fun queryImages(): List<MediaStoreImage> {
         Log.i(">>>", "queryImages")
         val images = mutableListOf<MediaStoreImage>()

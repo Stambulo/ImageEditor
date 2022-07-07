@@ -23,11 +23,15 @@ class GalleryViewModel(application: Application): BaseViewModel(application) {
     private val _permissionNeededForDelete = MutableLiveData<IntentSender?>()
 
     fun loadImages() {
+        //TODO: better to launch lightweight operations on IO Dispatcher
         viewModelScope.launch {
             val imageList = queryImages()
+            //TODO: hope you've understood difference between postValue and .value
             _images.postValue(imageList)
 
             if (contentObserver == null) {
+                //the most controversial part of AndroidViewModel is context reference
+                //So the best practise is not to use it at all, but the main rule is TO NOT SAVE ANY REFERENCES to context.
                 contentObserver = getApplication<Application>().contentResolver.registerObserver(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                 ) {

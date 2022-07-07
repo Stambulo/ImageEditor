@@ -63,6 +63,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
     }
 
     private fun checkCameraHardware(context: Context): Boolean {
+        //TODO: 'Return' can be lifted out of 'if'
         if (context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
             // this device has a camera
             requestCameraPermission()
@@ -90,6 +91,8 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
         }
     }
 
+    //TODO: move to top of the class
+    //TODO: this value should be private
     val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -116,6 +119,8 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
         } else { /** some error to be shown here */ }
     }
 
+    //TODO: Move this functionality out of this class. Fragment should not be responsible for data management (S in Solid)
+    //TODO: create some sort of ImageQueryManager
     private fun saveImage(bitmap: Bitmap, context: Context, folderName: String) {
         if (android.os.Build.VERSION.SDK_INT >= 29) {
             val values = contentValues()
@@ -139,6 +144,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
             val fileName = System.currentTimeMillis().toString() + ".png"
             val file = File(directory, fileName)
             saveImageToStream(bitmap, FileOutputStream(file))
+            //TODO: warning
             if (file.absolutePath != null) {
                 val values = contentValues()
                 values.put(MediaStore.Images.Media.DATA, file.absolutePath)
@@ -148,14 +154,17 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
         }
     }
 
+    //TODO: S to SOLID
     private fun contentValues() : ContentValues {
         val values = ContentValues()
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+        //TODO: copied from java code :D (;)
         values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000);
         values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
         return values
     }
 
+    //TODO: S to SOLID
     private fun saveImageToStream(bitmap: Bitmap, outputStream: OutputStream?) {
         if (outputStream != null) {
             try {
@@ -167,6 +176,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
         }
     }
 
+    //TODO: S to SOLID
     private fun deleteImage(image: MediaStoreImage) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.delete_dialog_title)
