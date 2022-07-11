@@ -10,13 +10,18 @@ import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import com.stambulo.milestone3.data.MediaStoreImage
+import com.stambulo.milestone3.data.ViewType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 class ImageRepositoryImpl(val application: Application){
+    private var prevDate: String = ""
+    private var headerId = 1
 
     suspend fun queryImages(): List<MediaStoreImage> {
         Log.i(">>>", "queryImages")
@@ -61,9 +66,18 @@ class ImageRepositoryImpl(val application: Application){
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         id
                     )
-                    val image = MediaStoreImage(id, displayName, dateModified, contentUri)
-                    images += image
-                    Log.i(">>>", "Added image: $image")
+
+                    if (prevDate != DateFormat.getDateInstance().format(dateModified)) {
+                        prevDate = DateFormat.getDateInstance().format(dateModified)
+                        val header =
+                            MediaStoreImage(headerId++.toLong(), displayName, dateModified, contentUri, ViewType.HEADER)
+                        images += header
+                    }
+
+                    val item =
+                        MediaStoreImage(id, displayName, dateModified, contentUri)
+                    images += item
+                    Log.i(">>>", "Added image: $item")
                 }
             }
         }

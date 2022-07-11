@@ -1,6 +1,5 @@
 package com.stambulo.milestone3.view.adapter
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.stambulo.milestone3.data.MediaStoreImage
@@ -14,7 +13,6 @@ class GalleryPagingSource(private val imagesRepository: ImageRepositoryImpl) :
         val imageResponse = imagesRepository.queryImages()
         val limit = imageResponse.size
         val imagePage = getSubList(imageResponse, nextPos, params.loadSize, limit)
-        Log.i(">>>2", "load. key = ${params.key}")
 
         return try {
             LoadResult.Page(

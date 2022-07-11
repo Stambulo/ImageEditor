@@ -8,5 +8,8 @@ data class MediaStoreImage(
     val displayName: String,
     val dateAdded: Date,
     val contentUri: Uri,
+    val viewType: ViewType = ViewType.ITEM,
     val isChecked: Boolean = false
 )
+
+enum class ViewType{ITEM, HEADER}

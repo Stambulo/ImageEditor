@@ -9,7 +9,7 @@
     <fragment
         android:id="@+id/galleryFragment"
         android:name="com.stambulo.milestone3.view.fragments.GalleryFragment"
-        tools:layout="@layout/gallery_layout">
+        tools:layout="@layout/gallery_item">
 
     </fragment>
 
