@@ -3,7 +3,6 @@ package com.stambulo.milestone3.view.fragments
 import android.Manifest
 import android.content.ContentValues
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -22,17 +21,11 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.stambulo.milestone3.BuildConfig
-import com.stambulo.milestone3.R
-import com.stambulo.milestone3.data.MediaStoreImage
-import com.stambulo.milestone3.databinding.DelimiterGalleryItemBinding
 import com.stambulo.milestone3.databinding.FragmentGalleryBinding
-import com.stambulo.milestone3.databinding.GalleryItemBinding
 import com.stambulo.milestone3.view.adapter.GalleryAdapter
 import com.stambulo.milestone3.view.viewmodels.GalleryViewModel
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -41,9 +34,8 @@ private const val READ_EXTERNAL_STORAGE_REQUEST = 0x1045
 
 class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBinding::inflate) {
     private val VIEW_TYPE_HEADER = 0
-    private val VIEW_TYPE_ITEM = 1
     private val viewModel: GalleryViewModel by viewModels()
-    private val galleryAdapter by lazy { GalleryAdapter { image -> deleteImage(image) } }
+    private val galleryAdapter by lazy { GalleryAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,8 +44,8 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
     }
 
     private fun setViewModel() {
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            viewModel.imagesWithPaging3.collectLatest {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.imagesWithPaging3.collect {
                 galleryAdapter.submitData(it)
             }
         }
@@ -202,19 +194,6 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
         }
     }
 
-    private fun deleteImage(image: MediaStoreImage) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.delete_dialog_title)
-            .setMessage(getString(R.string.delete_dialog_message, image.displayName))
-            .setPositiveButton(R.string.delete_dialog_positive) { _: DialogInterface, _: Int ->
-                viewModel.deleteImage(image)
-            }
-            .setNegativeButton(R.string.delete_dialog_negative) { dialog: DialogInterface, _: Int ->
-                dialog.dismiss()
-            }
-            .show()
-    }
-
     val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -262,7 +241,6 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
                 Environment.getExternalStorageDirectory().toString() + File.separator + folderName
             )
             // getExternalStorageDirectory is deprecated in API 29
-
             if (!directory.exists()) {
                 directory.mkdirs()
             }

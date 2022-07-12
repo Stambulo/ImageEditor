@@ -14,7 +14,7 @@ import com.stambulo.milestone3.databinding.GalleryItemBinding
 import java.text.DateFormat
 import java.util.*
 
-class GalleryAdapter(val onClick: (MediaStoreImage) -> Unit) :
+class GalleryAdapter() :
     PagingDataAdapter<MediaStoreImage, RecyclerView.ViewHolder>(
         MediaStoreCallBack()
     ) {
@@ -25,7 +25,7 @@ class GalleryAdapter(val onClick: (MediaStoreImage) -> Unit) :
         return if (viewType == VIEW_TYPE_ITEM) {
             val binding =
                 GalleryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            ImageViewHolder(binding, onClick)
+            ImageViewHolder(binding)
         } else {
             val binding = DelimiterGalleryItemBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -90,21 +90,17 @@ class GalleryAdapter(val onClick: (MediaStoreImage) -> Unit) :
     }
 
     inner class ImageViewHolder(
-        private val binding: GalleryItemBinding,
-        val onClick: (MediaStoreImage) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root) {
+        private val binding: GalleryItemBinding
+        ) : RecyclerView.ViewHolder(binding.root) {
         val imageView = binding.image
-
         init {
             imageView.setOnClickListener {
                 binding.checkEnabled.isVisible = !binding.checkEnabled.isVisible
             }
         }
-
         fun bind(imageList: MediaStoreImage) {
             binding.checkEnabled.isVisible = imageList.isChecked
         }
-
         fun bindState(isChecked: Boolean) { binding.checkEnabled.isVisible = isChecked }
     }
 
