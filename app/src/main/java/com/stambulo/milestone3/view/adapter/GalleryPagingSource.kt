@@ -3,7 +3,7 @@ package com.stambulo.milestone3.view.adapter
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.stambulo.milestone3.data.MediaStoreImage
-import com.stambulo.milestone3.data.repository.ImageRepositoryImpl
+import com.stambulo.milestone3.data.mediastore.ImageRepositoryImpl
 
 class GalleryPagingSource(private val imagesRepository: ImageRepositoryImpl) :
     PagingSource<Int, MediaStoreImage>() {

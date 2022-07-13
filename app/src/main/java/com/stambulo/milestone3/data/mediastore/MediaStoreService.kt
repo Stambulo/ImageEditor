@@ -1,12 +1,8 @@
-package com.stambulo.milestone3.data.repository
+package com.stambulo.milestone3.data.mediastore
 
 import android.annotation.SuppressLint
-import android.app.Application
-import android.content.ContentResolver
 import android.content.ContentUris
-import android.database.ContentObserver
-import android.net.Uri
-import android.os.Handler
+import android.content.Context
 import android.provider.MediaStore
 import android.util.Log
 import com.stambulo.milestone3.data.MediaStoreImage
@@ -18,7 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class ImageRepositoryImpl(val application: Application){
+class MediaStoreService(private val application: Context) {
     private var prevDate: String = ""
     private var headerId = 1
 
@@ -91,17 +87,4 @@ class ImageRepositoryImpl(val application: Application){
         SimpleDateFormat("dd.MM.yyyy").let { formatter ->
             TimeUnit.MICROSECONDS.toSeconds(formatter.parse("$day.$month.$year")?.time ?: 0)
         }
-
-    fun ContentResolver.registerObserver(
-        uri: Uri,
-        observer: (selfChange: Boolean) -> Unit
-    ): ContentObserver {
-        val contentObserver = object : ContentObserver(Handler()) {
-            override fun onChange(selfChange: Boolean) {
-                observer(selfChange)
-            }
-        }
-        registerContentObserver(uri, true, contentObserver)
-        return contentObserver
-    }
 }

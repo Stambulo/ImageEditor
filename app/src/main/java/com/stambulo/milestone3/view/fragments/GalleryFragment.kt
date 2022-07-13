@@ -25,6 +25,7 @@ import com.stambulo.milestone3.BuildConfig
 import com.stambulo.milestone3.databinding.FragmentGalleryBinding
 import com.stambulo.milestone3.view.adapter.GalleryAdapter
 import com.stambulo.milestone3.view.viewmodels.GalleryViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -32,10 +33,33 @@ import java.io.OutputStream
 
 private const val READ_EXTERNAL_STORAGE_REQUEST = 0x1045
 
+@AndroidEntryPoint
 class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBinding::inflate) {
     private val VIEW_TYPE_HEADER = 0
     private val viewModel: GalleryViewModel by viewModels()
     private val galleryAdapter by lazy { GalleryAdapter() }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            Log.i(">>>", "Granted")
+            takePhoto()
+        } else {
+            Log.i(">>>", "Denied")
+        }
+    }
+
+    private var photoResultLaunch =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            Log.i(">>>", "Activity Result - $result")
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                val bitmap = result.data?.extras?.get("data") as Bitmap
+                viewModel.saveImage(bitmap, requireContext(), "Milestone3")
+            } else {
+                /** some error to be shown here */
+            }
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -160,13 +184,13 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
     }
 
     private fun checkCameraHardware(context: Context): Boolean {
-        if (context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+        return if (context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
             // this device has a camera
             requestCameraPermission()
-            return true
+            true
         } else {
             // no camera on this device
-            return false
+            false
         }
     }
 
@@ -194,84 +218,9 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
         }
     }
 
-    val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            Log.i(">>>", "Granted")
-            takePhoto()
-        } else {
-            Log.i(">>>", "Denied")
-        }
-    }
-
     private fun takePhoto() {
         Log.i(">>>", "takePhoto()")
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         photoResultLaunch.launch(intent)
-    }
-
-    var photoResultLaunch =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            Log.i(">>>", "Activity Result - $result")
-            if (result.resultCode == AppCompatActivity.RESULT_OK) {
-                val bitmap = result.data?.extras?.get("data") as Bitmap
-                saveImage(bitmap, requireContext(), "Milestone3")
-            } else {
-                /** some error to be shown here */
-            }
-        }
-
-    private fun saveImage(bitmap: Bitmap, context: Context, folderName: String) {
-        if (android.os.Build.VERSION.SDK_INT >= 29) {
-            val values = contentValues()
-            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/" + folderName)
-            values.put(MediaStore.Images.Media.IS_PENDING, true)
-            // RELATIVE_PATH and IS_PENDING are introduced in API 29.
-
-            val uri: Uri? =
-                context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-            if (uri != null) {
-                saveImageToStream(bitmap, context.contentResolver.openOutputStream(uri))
-                values.put(MediaStore.Images.Media.IS_PENDING, false)
-                context.contentResolver.update(uri, values, null, null)
-            }
-        } else {
-            val directory = File(
-                Environment.getExternalStorageDirectory().toString() + File.separator + folderName
-            )
-            // getExternalStorageDirectory is deprecated in API 29
-            if (!directory.exists()) {
-                directory.mkdirs()
-            }
-            val fileName = System.currentTimeMillis().toString() + ".png"
-            val file = File(directory, fileName)
-            saveImageToStream(bitmap, FileOutputStream(file))
-            if (file.absolutePath != null) {
-                val values = contentValues()
-                values.put(MediaStore.Images.Media.DATA, file.absolutePath)
-                // .DATA is deprecated in API 29
-                context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-            }
-        }
-    }
-
-    private fun contentValues(): ContentValues {
-        val values = ContentValues()
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png")
-        values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000);
-        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-        return values
-    }
-
-    private fun saveImageToStream(bitmap: Bitmap, outputStream: OutputStream?) {
-        if (outputStream != null) {
-            try {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-                outputStream.close()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
     }
 }
