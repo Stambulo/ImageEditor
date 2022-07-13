@@ -23,9 +23,11 @@ import java.io.OutputStream
 import javax.inject.Inject
 
 @HiltViewModel
-class GalleryViewModel @Inject constructor(private val repository: ImageRepositoryImpl): ViewModel() {
+class GalleryViewModel @Inject constructor(
+    private val repository: ImageRepositoryImpl
+) : ViewModel() {
 
-    val imagesWithPaging3: Flow<PagingData<MediaStoreImage>> = Pager(PagingConfig(pageSize = 20)){
+    val imagesWithPaging3: Flow<PagingData<MediaStoreImage>> = Pager(PagingConfig(pageSize = 20)) {
         GalleryPagingSource(repository)
     }.flow.cachedIn(viewModelScope)
 

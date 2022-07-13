@@ -35,10 +35,10 @@ class GalleryPagingSource(private val imagesRepository: IImageRepositoryImpl) :
         loadSize: Int,
         limit: Int
     ): List<MediaStoreImage> {
-        if ((nextPos + loadSize) < limit){
+        if ((nextPos + loadSize) < limit) {
             return imageResponse.subList(nextPos, nextPos + loadSize)
         }
-        if ((nextPos < limit) && ((nextPos + loadSize) >= limit)){
+        if ((nextPos < limit) && ((nextPos + loadSize) >= limit)) {
             return imageResponse.subList(nextPos, limit)
         }
         return emptyList()

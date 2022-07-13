@@ -27,10 +27,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 private const val READ_EXTERNAL_STORAGE_REQUEST = 0x1045
+private const val VIEW_TYPE_HEADER = 0
 
 @AndroidEntryPoint
 class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBinding::inflate) {
-    private val VIEW_TYPE_HEADER = 0
     private val viewModel: GalleryViewModel by viewModels()
     private val galleryAdapter by lazy { GalleryAdapter() }
 

@@ -24,5 +24,6 @@ class MediaStoreModule {
 
     @Provides
     @Singleton
-    fun provideRepository(service: MediaStoreService): ImageRepositoryImpl = ImageRepositoryImpl(service)
+    fun provideRepository(service: MediaStoreService): ImageRepositoryImpl =
+        ImageRepositoryImpl(service)
 }

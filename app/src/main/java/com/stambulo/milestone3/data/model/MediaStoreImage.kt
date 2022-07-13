@@ -12,4 +12,4 @@ data class MediaStoreImage(
     val isChecked: Boolean = false
 )
 
-enum class ViewType{ITEM, HEADER}
+enum class ViewType { ITEM, HEADER }

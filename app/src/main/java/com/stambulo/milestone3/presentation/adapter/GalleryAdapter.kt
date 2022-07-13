@@ -17,8 +17,7 @@ import java.util.*
 private const val VIEW_TYPE_HEADER = 0
 private const val VIEW_TYPE_ITEM = 1
 
-class GalleryAdapter: PagingDataAdapter<MediaStoreImage, RecyclerView.ViewHolder>
-    (DiffUtils()){
+class GalleryAdapter : PagingDataAdapter<MediaStoreImage, RecyclerView.ViewHolder>(DiffUtils()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_TYPE_ITEM) {
@@ -90,17 +89,22 @@ class GalleryAdapter: PagingDataAdapter<MediaStoreImage, RecyclerView.ViewHolder
 
     inner class ImageViewHolder(
         private val binding: GalleryItemBinding
-        ) : RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         val imageView = binding.image
+
         init {
             imageView.setOnClickListener {
                 binding.checkEnabled.isVisible = !binding.checkEnabled.isVisible
             }
         }
+
         fun bind(imageList: MediaStoreImage) {
             binding.checkEnabled.isVisible = imageList.isChecked
         }
-        fun bindState(isChecked: Boolean) { binding.checkEnabled.isVisible = isChecked }
+
+        fun bindState(isChecked: Boolean) {
+            binding.checkEnabled.isVisible = isChecked
+        }
     }
 
     inner class DelimiterViewHolder(binding: DelimiterGalleryItemBinding) :
@@ -108,7 +112,7 @@ class GalleryAdapter: PagingDataAdapter<MediaStoreImage, RecyclerView.ViewHolder
         private val data = binding.delimiterData
         private val number = binding.delimiterNumber
 
-        fun bind(delimiterData: Long, date: Date?){
+        fun bind(delimiterData: Long, date: Date?) {
             data.text = date?.let { DateFormat.getDateInstance().format(it) }
             number.text = delimiterData.toString()
         }

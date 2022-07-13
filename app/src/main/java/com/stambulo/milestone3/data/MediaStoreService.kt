@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class MediaStoreService(private val application: Context): IMediaStoreService {
+class MediaStoreService(private val application: Context) : IMediaStoreService {
     private var prevDate: String = ""
     private var headerId = 1
 
@@ -64,7 +64,13 @@ class MediaStoreService(private val application: Context): IMediaStoreService {
                     if (prevDate != DateFormat.getDateInstance().format(dateModified)) {
                         prevDate = DateFormat.getDateInstance().format(dateModified)
                         val header =
-                            MediaStoreImage(headerId++.toLong(), displayName, dateModified, contentUri, ViewType.HEADER)
+                            MediaStoreImage(
+                                headerId++.toLong(),
+                                displayName,
+                                dateModified,
+                                contentUri,
+                                ViewType.HEADER
+                            )
                         images += header
                     }
 
