@@ -1,12 +1,11 @@
-package com.stambulo.milestone3.data.mediastore
+package com.stambulo.milestone3.data
 
 import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
 import android.util.Log
-import com.stambulo.milestone3.data.MediaStoreImage
-import com.stambulo.milestone3.data.ViewType
+import com.stambulo.milestone3.domain.IMediaStoreService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.DateFormat
@@ -14,11 +13,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class MediaStoreService(private val application: Context) {
+class MediaStoreService(private val application: Context): IMediaStoreService {
     private var prevDate: String = ""
     private var headerId = 1
 
-    suspend fun queryImages(): List<MediaStoreImage> {
+    override suspend fun queryImages(): List<MediaStoreImage> {
         Log.i(">>>", "queryImages")
         val images = mutableListOf<MediaStoreImage>()
 

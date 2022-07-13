@@ -1,4 +1,4 @@
-package com.stambulo.milestone3.view.viewmodels
+package com.stambulo.milestone3.presentation.viewmodels
 
 import android.content.ContentValues
 import android.content.Context
@@ -12,9 +12,9 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.stambulo.milestone3.data.ImageRepositoryImpl
 import com.stambulo.milestone3.data.MediaStoreImage
-import com.stambulo.milestone3.data.mediastore.ImageRepositoryImpl
-import com.stambulo.milestone3.view.adapter.GalleryPagingSource
+import com.stambulo.milestone3.presentation.adapter.GalleryPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import java.io.File

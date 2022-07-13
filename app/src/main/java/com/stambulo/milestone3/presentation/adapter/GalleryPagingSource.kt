@@ -1,11 +1,11 @@
-package com.stambulo.milestone3.view.adapter
+package com.stambulo.milestone3.presentation.adapter
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.stambulo.milestone3.data.MediaStoreImage
-import com.stambulo.milestone3.data.mediastore.ImageRepositoryImpl
+import com.stambulo.milestone3.domain.IImageRepositoryImpl
 
-class GalleryPagingSource(private val imagesRepository: ImageRepositoryImpl) :
+class GalleryPagingSource(private val imagesRepository: IImageRepositoryImpl) :
     PagingSource<Int, MediaStoreImage>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MediaStoreImage> {

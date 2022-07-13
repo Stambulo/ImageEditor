@@ -1,4 +1,4 @@
-package com.stambulo.milestone3
+package com.stambulo.milestone3.app
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -14,5 +14,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+
+        // Main TODO`s
+        //TODO: design of adapters, grouping and etc.
     }
 }

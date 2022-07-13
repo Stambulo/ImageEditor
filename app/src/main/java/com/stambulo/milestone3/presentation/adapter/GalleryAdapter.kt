@@ -1,25 +1,24 @@
-package com.stambulo.milestone3.view.adapter
+package com.stambulo.milestone3.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.stambulo.milestone3.data.MediaStoreImage
 import com.stambulo.milestone3.data.ViewType
 import com.stambulo.milestone3.databinding.DelimiterGalleryItemBinding
 import com.stambulo.milestone3.databinding.GalleryItemBinding
+import com.stambulo.milestone3.presentation.util.DiffUtils
 import java.text.DateFormat
 import java.util.*
 
-class GalleryAdapter() :
-    PagingDataAdapter<MediaStoreImage, RecyclerView.ViewHolder>(
-        MediaStoreCallBack()
-    ) {
-    private val VIEW_TYPE_HEADER = 0
-    private val VIEW_TYPE_ITEM = 1
+private const val VIEW_TYPE_HEADER = 0
+private const val VIEW_TYPE_ITEM = 1
+
+class GalleryAdapter: PagingDataAdapter<MediaStoreImage, RecyclerView.ViewHolder>
+    (DiffUtils()){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_TYPE_ITEM) {
@@ -51,7 +50,7 @@ class GalleryAdapter() :
             VIEW_TYPE_HEADER -> {
                 val mediaStoreImage = getItem(position)
                 val h = holder as DelimiterViewHolder
-                mediaStoreImage?.id?.let { h.bind(it, mediaStoreImage?.dateAdded) }
+                mediaStoreImage?.id?.let { h.bind(it, mediaStoreImage.dateAdded) }
             }
         }
     }
@@ -75,7 +74,7 @@ class GalleryAdapter() :
             VIEW_TYPE_HEADER -> {
                 val h = holder as DelimiterViewHolder
                 if (payloads.isEmpty()) {
-                    super.onBindViewHolder(holder, position, payloads)
+                    super.onBindViewHolder(h, position, payloads)
                 }
             }
         }
@@ -104,33 +103,14 @@ class GalleryAdapter() :
         fun bindState(isChecked: Boolean) { binding.checkEnabled.isVisible = isChecked }
     }
 
-    inner class DelimiterViewHolder(private val binding: DelimiterGalleryItemBinding) :
+    inner class DelimiterViewHolder(binding: DelimiterGalleryItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val data = binding.delimiterData
-        val number = binding.delimiterNumber
+        private val data = binding.delimiterData
+        private val number = binding.delimiterNumber
 
         fun bind(delimiterData: Long, date: Date?){
-            data.text = DateFormat.getDateInstance().format(date)
+            data.text = date?.let { DateFormat.getDateInstance().format(it) }
             number.text = delimiterData.toString()
-        }
-    }
-
-    class MediaStoreCallBack : DiffUtil.ItemCallback<MediaStoreImage>() {
-        override fun areItemsTheSame(
-            oldItem: MediaStoreImage,
-            newItem: MediaStoreImage
-        ) = oldItem.id == newItem.id
-
-        override fun areContentsTheSame(
-            oldItem: MediaStoreImage,
-            newItem: MediaStoreImage
-        ) = oldItem == newItem
-
-        override fun getChangePayload(
-            oldItem: MediaStoreImage,
-            newItem: MediaStoreImage
-        ): Any? {
-            return if (oldItem.id != newItem.id) true else null
         }
     }
 }

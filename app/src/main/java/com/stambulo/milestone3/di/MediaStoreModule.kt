@@ -1,8 +1,8 @@
 package com.stambulo.milestone3.di
 
 import android.content.Context
-import com.stambulo.milestone3.data.mediastore.ImageRepositoryImpl
-import com.stambulo.milestone3.data.mediastore.MediaStoreService
+import com.stambulo.milestone3.data.ImageRepositoryImpl
+import com.stambulo.milestone3.data.MediaStoreService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

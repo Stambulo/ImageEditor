@@ -1,14 +1,12 @@
-package com.stambulo.milestone3.view.fragments
+package com.stambulo.milestone3.presentation.fragments
 
 import android.Manifest
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
@@ -23,13 +21,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.stambulo.milestone3.BuildConfig
 import com.stambulo.milestone3.databinding.FragmentGalleryBinding
-import com.stambulo.milestone3.view.adapter.GalleryAdapter
-import com.stambulo.milestone3.view.viewmodels.GalleryViewModel
+import com.stambulo.milestone3.presentation.adapter.GalleryAdapter
+import com.stambulo.milestone3.presentation.viewmodels.GalleryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
-import java.io.OutputStream
 
 private const val READ_EXTERNAL_STORAGE_REQUEST = 0x1045
 
@@ -141,6 +136,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
