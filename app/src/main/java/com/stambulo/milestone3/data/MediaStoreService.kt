@@ -1,28 +1,23 @@
-package com.stambulo.milestone3.view.viewmodels
+package com.stambulo.milestone3.data
 
 import android.annotation.SuppressLint
-import android.app.Application
-import android.content.ContentResolver
 import android.content.ContentUris
-import android.database.ContentObserver
-import android.net.Uri
-import android.os.Handler
+import android.content.Context
 import android.provider.MediaStore
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import com.stambulo.milestone3.data.MediaStoreImage
+import com.stambulo.milestone3.domain.IMediaStoreService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-//TODO: better to use ViewModel class as a base class
-//TODO: base viewModel should not contains or implements logical functions
-abstract class BaseViewModel(application: Application) : AndroidViewModel(application) {
+class MediaStoreService(private val application: Context) : IMediaStoreService {
+    private var prevDate: String = ""
+    private var headerId = 1
 
-    //TODO: should be moved to repository
-    suspend fun queryImages(): List<MediaStoreImage> {
+    override suspend fun queryImages(): List<MediaStoreImage> {
         Log.i(">>>", "queryImages")
         val images = mutableListOf<MediaStoreImage>()
 
@@ -38,7 +33,7 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
                 arrayOf(dateToTimestamp(day = 22, month = 10, year = 2008).toString())
             val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
 
-            getApplication<Application>().contentResolver.query(
+            application.contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 projection,
                 selection,
@@ -65,9 +60,24 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         id
                     )
-                    val image = MediaStoreImage(id, displayName, dateModified, contentUri)
-                    images += image
-                    Log.i(">>>", "Added image: $image")
+
+                    if (prevDate != DateFormat.getDateInstance().format(dateModified)) {
+                        prevDate = DateFormat.getDateInstance().format(dateModified)
+                        val header =
+                            MediaStoreImage(
+                                headerId++.toLong(),
+                                displayName,
+                                dateModified,
+                                contentUri,
+                                ViewType.HEADER
+                            )
+                        images += header
+                    }
+
+                    val item =
+                        MediaStoreImage(id, displayName, dateModified, contentUri)
+                    images += item
+                    Log.i(">>>", "Added image: $item")
                 }
             }
         }
@@ -82,17 +92,4 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
         SimpleDateFormat("dd.MM.yyyy").let { formatter ->
             TimeUnit.MICROSECONDS.toSeconds(formatter.parse("$day.$month.$year")?.time ?: 0)
         }
-
-    fun ContentResolver.registerObserver(
-        uri: Uri,
-        observer: (selfChange: Boolean) -> Unit
-    ): ContentObserver {
-        val contentObserver = object : ContentObserver(Handler()) {
-            override fun onChange(selfChange: Boolean) {
-                observer(selfChange)
-            }
-        }
-        registerContentObserver(uri, true, contentObserver)
-        return contentObserver
-    }
 }

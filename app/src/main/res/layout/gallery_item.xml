@@ -6,10 +6,10 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="@dimen/_82sdp"
-        android:layout_height="@dimen/_82sdp"
-        android:layout_margin="@dimen/_3sdp"
-        app:cardCornerRadius="3dp"
+        android:layout_width="@dimen/_65sdp"
+        android:layout_height="@dimen/_65sdp"
+        android:layout_margin="@dimen/_7sdp"
+        app:cardCornerRadius="4dp"
         app:cardElevation="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

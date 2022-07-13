@@ -8,8 +8,8 @@
 
     <fragment
         android:id="@+id/galleryFragment"
-        android:name="com.stambulo.milestone3.view.fragments.GalleryFragment"
-        tools:layout="@layout/gallery_layout">
+        android:name="com.stambulo.milestone3.presentation.fragments.GalleryFragment"
+        tools:layout="@layout/gallery_item">
 
     </fragment>
 

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragments.GalleryFragment"
+    tools:context=".presentation.fragments.GalleryFragment"
     android:background="@color/background_color_0A0A0F">
 
     <TextView
