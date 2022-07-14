@@ -2,7 +2,7 @@ package com.stambulo.milestone3.presentation.adapter
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.stambulo.milestone3.data.MediaStoreImage
+import com.stambulo.milestone3.data.model.MediaStoreImage
 import com.stambulo.milestone3.domain.IImageRepositoryImpl
 
 class GalleryPagingSource(private val imagesRepository: IImageRepositoryImpl) :

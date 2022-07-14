@@ -8,6 +8,7 @@
     <string name="delete_dialog_positive">Delete</string>
     <string name="delete_dialog_negative">Cancel</string>
     <string name="gallery">Gallery</string>
+    <!-- TODO: you should not store dev data in resources -->
     <string name="data">data</string>
     <string name="number">number</string>
 </resources>

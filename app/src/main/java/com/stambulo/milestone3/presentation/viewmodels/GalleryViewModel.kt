@@ -13,7 +13,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.stambulo.milestone3.data.ImageRepositoryImpl
-import com.stambulo.milestone3.data.MediaStoreImage
+import com.stambulo.milestone3.data.model.MediaStoreImage
 import com.stambulo.milestone3.presentation.adapter.GalleryPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -27,13 +27,18 @@ class GalleryViewModel @Inject constructor(
     private val repository: ImageRepositoryImpl
 ) : ViewModel() {
 
+    //TODO: move to repository
+    //TODO: make pageSize bigger for gallery, how about 200-400
     val imagesWithPaging3: Flow<PagingData<MediaStoreImage>> = Pager(PagingConfig(pageSize = 20)) {
         GalleryPagingSource(repository)
     }.flow.cachedIn(viewModelScope)
 
+    //TODO: move to repository or Util
+    //should be tested in future
     fun saveImage(bitmap: Bitmap, context: Context, folderName: String) {
         if (android.os.Build.VERSION.SDK_INT >= 29) {
             val values = contentValues()
+            //TODO: 'String' concatenation can be converted to a template (Java style :( )
             values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/" + folderName)
             values.put(MediaStore.Images.Media.IS_PENDING, true)
             // RELATIVE_PATH and IS_PENDING are introduced in API 29.
@@ -63,6 +68,7 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
+    //TODO: move to util
     private fun contentValues(): ContentValues {
         val values = ContentValues()
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/png")
@@ -71,6 +77,7 @@ class GalleryViewModel @Inject constructor(
         return values
     }
 
+    //TODO: move to repository / util
     private fun saveImageToStream(bitmap: Bitmap, outputStream: OutputStream?) {
         if (outputStream != null) {
             try {

@@ -8,19 +8,21 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
 abstract class BaseFragment<Binding : ViewBinding>(
-    //TODO: should not use lambda, use abstract function instead
-    private val inflateMethod: (LayoutInflater, ViewGroup?, Boolean) -> Binding
 ) : Fragment() {
 
     private var _binding: Binding? = null
     val binding: Binding get() = _binding ?: throw NullPointerException()
 
+    //TODO: this fun should not be open, but abstract
     open fun Binding.initialize() {}
+
+    //TODO: instead of lambda
+    abstract fun inflateMethod(inflater: LayoutInflater, viewGroup: ViewGroup?) : Binding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        _binding = inflateMethod.invoke(inflater, container, false)
+        _binding = inflateMethod(inflater, container)
         binding.initialize()
         return binding.root
     }

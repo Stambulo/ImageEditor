@@ -6,8 +6,8 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.stambulo.milestone3.data.MediaStoreImage
-import com.stambulo.milestone3.data.ViewType
+import com.stambulo.milestone3.data.model.MediaStoreImage
+import com.stambulo.milestone3.data.model.ViewType
 import com.stambulo.milestone3.databinding.DelimiterGalleryItemBinding
 import com.stambulo.milestone3.databinding.GalleryItemBinding
 import com.stambulo.milestone3.presentation.util.DiffUtils

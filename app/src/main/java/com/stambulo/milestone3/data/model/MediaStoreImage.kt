@@ -1,4 +1,4 @@
-package com.stambulo.milestone3.data
+package com.stambulo.milestone3.data.model
 
 import android.net.Uri
 import java.util.*

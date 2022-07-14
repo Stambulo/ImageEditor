@@ -10,7 +10,9 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -30,7 +32,7 @@ private const val READ_EXTERNAL_STORAGE_REQUEST = 0x1045
 private const val VIEW_TYPE_HEADER = 0
 
 @AndroidEntryPoint
-class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBinding::inflate) {
+class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
     private val viewModel: GalleryViewModel by viewModels()
     private val galleryAdapter by lazy { GalleryAdapter() }
 
@@ -62,7 +64,16 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
         setViews()
     }
 
+    //TODO: instead of lambda in base constructor, use abstract functions
+    override fun inflateMethod(
+        inflater: LayoutInflater,
+        viewGroup: ViewGroup?
+    ): FragmentGalleryBinding {
+        return FragmentGalleryBinding.inflate(inflater, viewGroup, false)
+    }
+
     private fun setViewModel() {
+        //TODO: you should add loading to not show empty page for some seconds.
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.imagesWithPaging3.collect {
                 galleryAdapter.submitData(it)
@@ -71,6 +82,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
     }
 
     private fun setViews() {
+        //TODO: you can create not anonymous, but normal class to be used with it. Let it have a constructor with (Int) -> Int lambda, where arg is position and return is span size.
         val gridLayoutManager = GridLayoutManager(activity, 4)
         binding.rvGallery.apply {
             gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -112,6 +124,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
 
     private fun showImages() {
         setViewModel()
+        //TODO: use binding.apply { ... } more often.
         binding.welcomeView.isVisible = false
         binding.permissionRationaleView.isVisible = false
         binding.recyclerView.isVisible = true
@@ -129,6 +142,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
+            //TODO: deprecated requests, you already use new API
             requestPermissions(
                 permissions,
                 READ_EXTERNAL_STORAGE_REQUEST
@@ -136,6 +150,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
         }
     }
 
+    //TODO: deprecated requests, use new API (https://developer.android.com/training/permissions/requesting), you already use it.
     @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -175,6 +190,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(FragmentGalleryBind
             addCategory(Intent.CATEGORY_DEFAULT)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }.also { intent ->
+            //TODO: if you use explicit intent, never call startActivity without try/catch block. There are some cases, when some phones does not have default apps for some cases, like email app or sms app.
             startActivity(intent)
         }
     }

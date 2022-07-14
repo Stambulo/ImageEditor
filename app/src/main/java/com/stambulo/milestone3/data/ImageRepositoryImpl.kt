@@ -1,5 +1,6 @@
 package com.stambulo.milestone3.data
 
+import com.stambulo.milestone3.data.model.MediaStoreImage
 import com.stambulo.milestone3.domain.IImageRepositoryImpl
 import com.stambulo.milestone3.domain.IMediaStoreService
 

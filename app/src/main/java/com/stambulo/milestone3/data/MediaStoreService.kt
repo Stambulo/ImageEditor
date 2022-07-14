@@ -5,6 +5,8 @@ import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
 import android.util.Log
+import com.stambulo.milestone3.data.model.MediaStoreImage
+import com.stambulo.milestone3.data.model.ViewType
 import com.stambulo.milestone3.domain.IMediaStoreService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

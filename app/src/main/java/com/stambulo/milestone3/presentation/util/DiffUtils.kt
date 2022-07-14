@@ -1,7 +1,7 @@
 package com.stambulo.milestone3.presentation.util
 
 import androidx.recyclerview.widget.DiffUtil
-import com.stambulo.milestone3.data.MediaStoreImage
+import com.stambulo.milestone3.data.model.MediaStoreImage
 
 class DiffUtils : DiffUtil.ItemCallback<MediaStoreImage>() {
     override fun areItemsTheSame(
@@ -14,6 +14,7 @@ class DiffUtils : DiffUtil.ItemCallback<MediaStoreImage>() {
         newItem: MediaStoreImage
     ) = oldItem == newItem
 
+    //TODO: definitely wrong approach (oldItem.id != newItem.id will be always true here), let we use payloads in the next milestone.
     override fun getChangePayload(
         oldItem: MediaStoreImage,
         newItem: MediaStoreImage
