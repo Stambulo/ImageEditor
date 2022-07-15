@@ -98,10 +98,6 @@ class GalleryAdapter : PagingDataAdapter<MediaStoreImage, RecyclerView.ViewHolde
             }
         }
 
-        fun bind(imageList: MediaStoreImage) {
-            binding.checkEnabled.isVisible = imageList.isChecked
-        }
-
         fun bindState(isChecked: Boolean) {
             binding.checkEnabled.isVisible = isChecked
         }

@@ -1,6 +1,7 @@
 package com.stambulo.milestone3.presentation.fragments
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -52,7 +53,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
             Log.i(">>>", "Activity Result - $result")
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
                 val bitmap = result.data?.extras?.get("data") as Bitmap
-                viewModel.saveImage(bitmap, requireContext(), "Milestone3")
+                viewModel.repository.saveImage(bitmap, requireContext(), "Milestone3")
             } else {
                 /** some error to be shown here */
             }
@@ -64,7 +65,6 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
         setViews()
     }
 
-    //TODO: instead of lambda in base constructor, use abstract functions
     override fun inflateMethod(
         inflater: LayoutInflater,
         viewGroup: ViewGroup?
@@ -124,16 +124,19 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
 
     private fun showImages() {
         setViewModel()
-        //TODO: use binding.apply { ... } more often.
-        binding.welcomeView.isVisible = false
-        binding.permissionRationaleView.isVisible = false
-        binding.recyclerView.isVisible = true
-        binding.fab.isVisible = true
+        binding.apply {
+            welcomeView.isVisible = false
+            permissionRationaleView.isVisible = false
+            recyclerView.isVisible = true
+            fab.isVisible = true
+        }
     }
 
     private fun showNoAccess() {
-        binding.welcomeView.isVisible = false
-        binding.permissionRationaleView.isVisible = true
+        binding.apply {
+            welcomeView.isVisible = false
+            permissionRationaleView.isVisible = true
+        }
     }
 
     private fun requestPermission() {
@@ -190,8 +193,11 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
             addCategory(Intent.CATEGORY_DEFAULT)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }.also { intent ->
-            //TODO: if you use explicit intent, never call startActivity without try/catch block. There are some cases, when some phones does not have default apps for some cases, like email app or sms app.
-            startActivity(intent)
+            try {
+                startActivity(intent)
+            } catch (activityNotFound: ActivityNotFoundException){
+                Log.i(">>>", "Error: Activity not found - $activityNotFound")
+            }
         }
     }
 

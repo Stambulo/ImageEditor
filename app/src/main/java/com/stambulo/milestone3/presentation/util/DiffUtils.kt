@@ -13,12 +13,4 @@ class DiffUtils : DiffUtil.ItemCallback<MediaStoreImage>() {
         oldItem: MediaStoreImage,
         newItem: MediaStoreImage
     ) = oldItem == newItem
-
-    //TODO: definitely wrong approach (oldItem.id != newItem.id will be always true here), let we use payloads in the next milestone.
-    override fun getChangePayload(
-        oldItem: MediaStoreImage,
-        newItem: MediaStoreImage
-    ): Any? {
-        return if (oldItem.id != newItem.id) true else null
-    }
 }

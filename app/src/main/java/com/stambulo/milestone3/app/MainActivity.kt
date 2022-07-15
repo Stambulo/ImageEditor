@@ -14,8 +14,5 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-
-        // Main TODO`s
-        //TODO: design of adapters, grouping and etc.
     }
 }
