@@ -14,9 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
-class GalleryViewModel @Inject constructor(
-    val repository: ImageRepositoryImpl
-) : ViewModel() {
+class GalleryViewModel @Inject constructor(val repository: ImageRepositoryImpl) : ViewModel() {
 
     val imagesWithPaging3: Flow<PagingData<MediaStoreImage>> = Pager(PagingConfig(pageSize = 300)) {
         GalleryPagingSource(repository)

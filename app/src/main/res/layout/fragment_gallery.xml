@@ -8,6 +8,15 @@
     tools:context=".presentation.fragments.GalleryFragment"
     android:background="@color/background_color_0A0A0F">
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <TextView
         android:id="@+id/gallery_label"
         android:layout_width="wrap_content"
@@ -27,44 +36,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent=".1" />
-
-    <LinearLayout
-        android:id="@+id/permission_rationale_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/top_guideline"
-        tools:visibility="visible">
-
-        <ImageView
-            android:id="@+id/locked"
-            android:layout_width="@dimen/_99sdp"
-            android:layout_height="@dimen/_99sdp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_phonelink_lock_black_24dp"
-            app:tint="@color/purple_500" />
-
-        <TextView
-            android:id="@+id/permission_required_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_52sdp"
-            android:layout_marginEnd="@dimen/_52sdp"
-            android:gravity="center"
-            android:paddingTop="@dimen/_12sdp"
-            android:text="@string/permission_not_granted" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/grant_permission_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_12sdp"
-            android:text="@string/grant_permission" />
-
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/welcome_view"
