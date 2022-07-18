@@ -18,9 +18,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
+import com.stambulo.milestone3.R
 import com.stambulo.milestone3.databinding.FragmentGalleryBinding
 import com.stambulo.milestone3.presentation.adapter.GalleryAdapter
+import com.stambulo.milestone3.presentation.mvi.GalleryIntent
+import com.stambulo.milestone3.presentation.mvi.GalleryState
 import com.stambulo.milestone3.presentation.viewmodels.GalleryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -30,7 +34,18 @@ private const val VIEW_TYPE_HEADER = 0
 @AndroidEntryPoint
 class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
     private val viewModel: GalleryViewModel by viewModels()
-    private val galleryAdapter by lazy { GalleryAdapter() }
+    private val galleryAdapter by lazy { GalleryAdapter(adapterClickListener) }
+
+    private val adapterClickListener: GalleryAdapter.OnImageClickListener =
+        object : GalleryAdapter.OnImageClickListener {
+            override fun onItemClick(imageUri: String) {
+                lifecycleScope.launch {
+                    viewModel.intent.send(
+                        GalleryIntent.GoToEditing(imageUri)
+                    )
+                }
+            }
+        }
 
     private val requestStoragePermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -68,6 +83,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requestStoragePermission()
+        observeViewModel()
         setViews()
     }
 
@@ -97,6 +113,26 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
             openAlbum.setOnClickListener { requestStoragePermission() }
             fab.setOnClickListener { checkCameraHardware(requireContext()) }
         }
+    }
+
+    fun observeViewModel() {
+        lifecycleScope.launch {
+            viewModel.galleryState.collect {
+                when (it.type) {
+                    GalleryState.Type.IDLE -> {}
+                    GalleryState.Type.NavigateToEditing -> {
+                        goToEditingScreen(it.imageName)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun goToEditingScreen(imageName: String) {
+        val bundle = Bundle()
+        bundle.putString("imageName", imageName)
+        Navigation.findNavController(requireActivity(), R.id.nav_host)
+            .navigate(R.id.action_galleryFragment_to_editingFragment, bundle)
     }
 
     private fun showImages() {
@@ -174,7 +210,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
         photoResultLaunch.launch(intent)
     }
 
-    inner class SpanSize(): GridLayoutManager.SpanSizeLookup(){
+    inner class SpanSize: GridLayoutManager.SpanSizeLookup(){
         override fun getSpanSize(position: Int): Int {
             return when (galleryAdapter.getItemViewType(position)) {
                 VIEW_TYPE_HEADER -> 4

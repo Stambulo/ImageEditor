@@ -17,7 +17,9 @@ import java.util.*
 private const val VIEW_TYPE_HEADER = 0
 private const val VIEW_TYPE_ITEM = 1
 
-class GalleryAdapter : PagingDataAdapter<MediaStoreImage, RecyclerView.ViewHolder>(DiffUtils()) {
+class GalleryAdapter(
+    private var itemClickListener: OnImageClickListener
+) : PagingDataAdapter<MediaStoreImage, RecyclerView.ViewHolder>(DiffUtils()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_TYPE_ITEM) {
@@ -45,6 +47,8 @@ class GalleryAdapter : PagingDataAdapter<MediaStoreImage, RecyclerView.ViewHolde
                     .thumbnail(0.33f)
                     .centerCrop()
                     .into(h.imageView)
+
+                h.bind(mediaStoreImage)
             }
             VIEW_TYPE_HEADER -> {
                 val mediaStoreImage = getItem(position)
@@ -92,14 +96,14 @@ class GalleryAdapter : PagingDataAdapter<MediaStoreImage, RecyclerView.ViewHolde
     ) : RecyclerView.ViewHolder(binding.root) {
         val imageView = binding.image
 
-        init {
-            imageView.setOnClickListener {
-                binding.checkEnabled.isVisible = !binding.checkEnabled.isVisible
-            }
-        }
-
         fun bindState(isChecked: Boolean) {
             binding.checkEnabled.isVisible = isChecked
+        }
+
+        fun bind(mediaStoreImage: MediaStoreImage?) {
+            imageView.setOnClickListener {
+                mediaStoreImage?.displayName?.let { name -> itemClickListener.onItemClick(name) }
+            }
         }
     }
 
@@ -108,9 +112,13 @@ class GalleryAdapter : PagingDataAdapter<MediaStoreImage, RecyclerView.ViewHolde
         private val data = binding.delimiterData
         private val number = binding.delimiterNumber
 
-        fun bind(delimiterData: Long, date: Date?) {
+        fun bind(delimiterNumber: Long, date: Date?) {
             data.text = date?.let { DateFormat.getDateInstance().format(it) }
-            number.text = delimiterData.toString()
+            number.text = delimiterNumber.toString()
         }
+    }
+
+    interface OnImageClickListener {
+        fun onItemClick(imageUri: String)
     }
 }

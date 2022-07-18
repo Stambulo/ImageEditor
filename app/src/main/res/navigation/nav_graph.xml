@@ -10,7 +10,18 @@
         android:id="@+id/galleryFragment"
         android:name="com.stambulo.milestone3.presentation.fragments.GalleryFragment"
         tools:layout="@layout/gallery_item">
+        <action
+            android:id="@+id/action_galleryFragment_to_editingFragment"
+            app:destination="@id/editingFragment" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/editingFragment"
+        android:name="com.stambulo.milestone3.presentation.fragments.ImageEditingFragment"
+        tools:layout="@layout/fragment_image_editing">
+        <action
+            android:id="@+id/action_editingFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
     </fragment>
 
 </navigation>
