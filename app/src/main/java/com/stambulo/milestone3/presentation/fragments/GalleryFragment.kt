@@ -88,18 +88,10 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
     }
 
     private fun setViews() {
-        //TODO: you can create not anonymous, but normal class to be used with it.
-        // Let it have a constructor with (Int) -> Int lambda, where arg is position and return is span size.
         val gridLayoutManager = GridLayoutManager(activity, 4)
+        val spanSize = SpanSize()
         binding.apply {
-            gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return when (galleryAdapter.getItemViewType(position)) {
-                        VIEW_TYPE_HEADER -> 4
-                        else -> 1
-                    }
-                }
-            }
+            gridLayoutManager.spanSizeLookup = spanSize
             rvGallery.layoutManager = gridLayoutManager
             rvGallery.adapter = galleryAdapter
             openAlbum.setOnClickListener { requestStoragePermission() }
@@ -180,5 +172,14 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
         Log.i(">>>", "takePhoto()")
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         photoResultLaunch.launch(intent)
+    }
+
+    inner class SpanSize(): GridLayoutManager.SpanSizeLookup(){
+        override fun getSpanSize(position: Int): Int {
+            return when (galleryAdapter.getItemViewType(position)) {
+                VIEW_TYPE_HEADER -> 4
+                else -> 1
+            }
+        }
     }
 }
