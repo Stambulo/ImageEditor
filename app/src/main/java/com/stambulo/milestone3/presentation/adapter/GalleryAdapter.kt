@@ -1,5 +1,6 @@
 package com.stambulo.milestone3.presentation.adapter
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -102,7 +103,7 @@ class GalleryAdapter(
 
         fun bind(mediaStoreImage: MediaStoreImage?) {
             imageView.setOnClickListener {
-                mediaStoreImage?.displayName?.let { name -> itemClickListener.onItemClick(name) }
+                mediaStoreImage?.contentUri.let { uri -> itemClickListener.onItemClick(uri) }
             }
         }
     }
@@ -119,6 +120,6 @@ class GalleryAdapter(
     }
 
     interface OnImageClickListener {
-        fun onItemClick(imageUri: String)
+        fun onItemClick(imageUri: Uri?)
     }
 }

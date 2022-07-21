@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -23,8 +24,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.stambulo.milestone3.R
 import com.stambulo.milestone3.databinding.FragmentGalleryBinding
 import com.stambulo.milestone3.presentation.adapter.GalleryAdapter
-import com.stambulo.milestone3.presentation.mvi.GalleryIntent
-import com.stambulo.milestone3.presentation.mvi.GalleryState
+import com.stambulo.milestone3.presentation.intents.GalleryIntent
+import com.stambulo.milestone3.presentation.states.GalleryState
 import com.stambulo.milestone3.presentation.viewmodels.GalleryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -38,7 +39,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
 
     private val adapterClickListener: GalleryAdapter.OnImageClickListener =
         object : GalleryAdapter.OnImageClickListener {
-            override fun onItemClick(imageUri: String) {
+            override fun onItemClick(imageUri: Uri?) {
                 lifecycleScope.launch {
                     viewModel.intent.send(
                         GalleryIntent.GoToEditing(imageUri)
@@ -94,7 +95,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
         return FragmentGalleryBinding.inflate(inflater, viewGroup, false)
     }
 
-    private fun setViewModel() {
+    override fun setupViewModel() {
         binding.progressBar.isVisible = true
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.imagesWithPaging3.collect {
@@ -115,28 +116,28 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
         }
     }
 
-    fun observeViewModel() {
+    override fun observeViewModel() {
         lifecycleScope.launch {
             viewModel.galleryState.collect {
                 when (it.type) {
                     GalleryState.Type.IDLE -> {}
                     GalleryState.Type.NavigateToEditing -> {
-                        goToEditingScreen(it.imageName)
+                        goToEditingScreen(it.imageUri)
                     }
                 }
             }
         }
     }
 
-    private fun goToEditingScreen(imageName: String) {
+    private fun goToEditingScreen(imageUri: Uri?) {
         val bundle = Bundle()
-        bundle.putString("imageName", imageName)
+        bundle.putString("imageName", imageUri.toString())
         Navigation.findNavController(requireActivity(), R.id.nav_host)
             .navigate(R.id.action_galleryFragment_to_editingFragment, bundle)
     }
 
     private fun showImages() {
-        setViewModel()
+        setupViewModel()
         binding.apply {
             progressBar.isVisible = false
             welcomeView.isVisible = false
@@ -205,7 +206,6 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
     }
 
     private fun takePhoto() {
-        Log.i(">>>", "takePhoto()")
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         photoResultLaunch.launch(intent)
     }

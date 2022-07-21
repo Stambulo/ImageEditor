@@ -1,5 +1,6 @@
 package com.stambulo.milestone3.presentation.viewmodels
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -8,8 +9,8 @@ import androidx.paging.cachedIn
 import com.stambulo.milestone3.data.ImageRepositoryImpl
 import com.stambulo.milestone3.data.model.MediaStoreImage
 import com.stambulo.milestone3.presentation.adapter.GalleryPagingSource
-import com.stambulo.milestone3.presentation.mvi.GalleryIntent
-import com.stambulo.milestone3.presentation.mvi.GalleryState
+import com.stambulo.milestone3.presentation.intents.GalleryIntent
+import com.stambulo.milestone3.presentation.states.GalleryState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,7 @@ class GalleryViewModel @Inject constructor(
     val repository: ImageRepositoryImpl
 ) : BaseViewModel<GalleryIntent>() {
 
-    private val _galleryState = MutableStateFlow(GalleryState(GalleryState.Type.IDLE, ""))
+    private val _galleryState = MutableStateFlow(GalleryState(GalleryState.Type.IDLE, null))
     val galleryState: StateFlow<GalleryState> get() = _galleryState
 
     init {
@@ -46,10 +47,10 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    private fun navigateToEditing(imageName: String) {
+    private fun navigateToEditing(imageUri: Uri?) {
         _galleryState.value = GalleryState(
             GalleryState.Type.NavigateToEditing,
-            imageName = imageName
+            imageUri = imageUri
         )
     }
 }
