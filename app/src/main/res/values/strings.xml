@@ -7,5 +7,11 @@
     <string name="delete_dialog_message">Delete %1$s?</string>
     <string name="delete_dialog_positive">Delete</string>
     <string name="delete_dialog_negative">Cancel</string>
+    <string name="zero_slider_initial_position">0</string>
+    <string name="brightness">Brightness</string>
+    <string name="monochrome">Monochrome</string>
+    <string name="vignette">Vignette</string>
+    <string name="contrast">Contrast</string>
     <string name="gallery">Gallery</string>
+    <string name="sepia">Sepia</string>
 </resources>

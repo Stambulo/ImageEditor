@@ -1,54 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background_color_0A0A0F">
 
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/back_chevron"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_12sdp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_chevron_left"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/ic_chevron_left"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/share_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_12sdp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_share"
         app:layout_constraintEnd_toStartOf="@id/confirm_button"
-        android:src="@drawable/ic_share"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/confirm_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_12sdp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_check"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/ic_check"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/edit_image"
         android:layout_width="@dimen/_276sdp"
         android:layout_height="@dimen/_267sdp"
         android:layout_marginVertical="@dimen/_12sdp"
-        app:layout_constraintTop_toBottomOf="@+id/back_chevron"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/back_chevron" />
+
+    <!--    Contrast Slider     -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:text="@string/contrast"
+        android:textColor="@color/delimiter_color_767676"
+        android:textSize="@dimen/_14ssp"
+        android:layout_marginTop="@dimen/_12sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_image" />
+
+    <TextView
+        android:id="@+id/contrast_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:text="@string/zero_slider_initial_position"
+        android:textColor="@color/delimiter_color_767676"
+        android:textSize="@dimen/_14ssp"
+        android:layout_marginTop="@dimen/_12sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_image" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/contrast_slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_20sdp"
+        android:value="0.0"
+        android:valueFrom="-100.0"
+        android:valueTo="100.0"
+        app:layout_constraintTop_toBottomOf="@id/edit_image" />
+
+    <!--    Brightness Slider     -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:text="@string/brightness"
+        android:textColor="@color/delimiter_color_767676"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contrast_slider" />
+
+    <TextView
+        android:id="@+id/brightness_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:text="@string/zero_slider_initial_position"
+        android:textColor="@color/delimiter_color_767676"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contrast_slider" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/brightness_slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_8sdp"
+        android:value="0.0"
+        android:valueFrom="-100.0"
+        android:valueTo="100.0"
+        app:layout_constraintTop_toBottomOf="@id/contrast_slider" />
+
+    <!--    Monochrome Slider     -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:text="@string/monochrome"
+        android:textColor="@color/delimiter_color_767676"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/brightness_slider" />
+
+    <TextView
+        android:id="@+id/monochrome_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:text="@string/zero_slider_initial_position"
+        android:textColor="@color/delimiter_color_767676"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/brightness_slider" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/monochrome_slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_8sdp"
+        android:value="0.0"
+        android:valueFrom="-100.0"
+        android:valueTo="100.0"
+        app:layout_constraintTop_toBottomOf="@id/brightness_slider" />
+
+    <!--    Sepia Slider     -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:text="@string/sepia"
+        android:textColor="@color/delimiter_color_767676"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/monochrome_slider" />
+
+    <TextView
+        android:id="@+id/sepia_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:text="@string/zero_slider_initial_position"
+        android:textColor="@color/delimiter_color_767676"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/monochrome_slider" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/sepia_slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_8sdp"
+        android:value="0.0"
+        android:valueFrom="-100.0"
+        android:valueTo="100.0"
+        app:layout_constraintTop_toBottomOf="@id/monochrome_slider" />
+
+    <!--    Vignette Slider     -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:text="@string/vignette"
+        android:textColor="@color/delimiter_color_767676"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sepia_slider" />
+
+    <TextView
+        android:id="@+id/vignette_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:text="@string/zero_slider_initial_position"
+        android:textColor="@color/delimiter_color_767676"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sepia_slider" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/vignette_slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_8sdp"
+        android:value="0.0"
+        android:valueFrom="-100.0"
+        android:valueTo="100.0"
+        app:layout_constraintTop_toBottomOf="@id/sepia_slider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
