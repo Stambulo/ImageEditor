@@ -1,10 +1,13 @@
 package com.stambulo.milestone3.presentation.fragments
 
 import android.content.Context
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -22,6 +25,8 @@ import kotlinx.coroutines.launch
 class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
     private val viewModel: EditingViewModel by viewModels()
     private lateinit var imageName: String
+    private var bitmapContrast = 1F
+    private var bitmapBrightness = 0F
 
     override fun inflateMethod(
         inflater: LayoutInflater,
@@ -43,10 +48,60 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         imageName = arguments?.getString("imageName") ?: "no file name"
+        setViews()
         setupViewModel()
         observeViewModel()
         setOnClickListener()
     }
+
+    private fun setViews(){
+        binding.apply {
+            confirmButton.setOnClickListener {
+                Toast.makeText(requireContext(), "Confirm", Toast.LENGTH_LONG).show()
+//                viewModel.repository.saveImage(getAdjustedBitmap(), requireContext(), "Milestone3")
+            }
+            contrastSlider.addOnChangeListener { _, value, _ ->
+                bitmapContrast = value
+                editImage.setColorFilter(getContrastBrightnessFilter(value, bitmapBrightness))
+                contrastValue.text = ((value*100)-100).toInt().toString()
+            }
+            brightnessSlider.addOnChangeListener { _, value, _ ->
+                bitmapBrightness = value
+                editImage.setColorFilter(getContrastBrightnessFilter(bitmapContrast, value))
+                brightnessValue.text = (value).toInt().toString()
+            }
+            monochromeSlider.addOnChangeListener { _, value, _ ->
+                Toast.makeText(requireContext(), value.toString(), Toast.LENGTH_LONG).show()
+            }
+            sepiaSlider.addOnChangeListener { _, value, _ ->
+                Toast.makeText(requireContext(), value.toString(), Toast.LENGTH_LONG).show()
+            }
+            vignetteSlider.addOnChangeListener { _, value, _ ->
+                Toast.makeText(requireContext(), value.toString(), Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun getContrastBrightnessFilter(contrast: Float, brightness: Float): ColorMatrixColorFilter {
+        val cm = ColorMatrix(
+            floatArrayOf(
+                contrast, 0f, 0f, 0f, brightness,
+                0f, contrast, 0f, 0f, brightness,
+                0f, 0f, contrast, 0f, brightness,
+                0f, 0f, 0f, 1f, 0f
+            )
+        )
+        return ColorMatrixColorFilter(cm)
+    }
+
+//    private fun getAdjustedBitmap(): Bitmap{
+//        val fileName = imageName
+//        val file = File(fileName)
+//        val bmp = BitmapFactory.decodeFile(file.toString())
+//        Log.i(">>>", imageName)
+//        Log.i(">>>", "$bmp")
+//        return bmp
+//    }
 
     override fun setupViewModel() {
         binding.progressBar.isVisible = true

@@ -6,7 +6,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.stambulo.milestone3.data.ImageRepositoryImpl
 import com.stambulo.milestone3.data.model.MediaStoreImage
 import com.stambulo.milestone3.presentation.adapter.GalleryPagingSource
 import com.stambulo.milestone3.presentation.intents.GalleryIntent
@@ -20,9 +19,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GalleryViewModel @Inject constructor(
-    val repository: ImageRepositoryImpl
-) : BaseViewModel<GalleryIntent>() {
+class GalleryViewModel @Inject constructor() : BaseViewModel<GalleryIntent>() {
 
     private val _galleryState = MutableStateFlow(GalleryState(GalleryState.Type.IDLE, null))
     val galleryState: StateFlow<GalleryState> get() = _galleryState
