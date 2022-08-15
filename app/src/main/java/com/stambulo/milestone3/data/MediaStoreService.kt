@@ -56,9 +56,7 @@ class MediaStoreService(private val application: Context) : IMediaStoreService {
                 val displayNameColumn =
                     cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
 
-                Log.i(">>>", "Found ${cursor.count} images")
                 while (cursor.moveToNext()) {
-
                     // Here we'll use the column indexs that we found above.
                     val id = cursor.getLong(idColumn)
                     val dateModified =
@@ -86,12 +84,9 @@ class MediaStoreService(private val application: Context) : IMediaStoreService {
                     val item =
                         MediaStoreImage(id, displayName, dateModified, contentUri)
                     images += item
-                    Log.i(">>>", "Added image: $item")
                 }
             }
         }
-
-        Log.i(">>>", "Found ${images.size} images")
         return images
     }
 
@@ -117,16 +112,11 @@ class MediaStoreService(private val application: Context) : IMediaStoreService {
                 context.contentResolver.update(uri, values, null, null)
             }
         } else {
-            val directory = File(
-                Environment.getExternalStorageDirectory().toString() + File.separator + folderName
-            )
-            // getExternalStorageDirectory is deprecated in API 29
-            if (!directory.exists()) {
-                directory.mkdirs()
-            }
+            Log.i(">>>", "Android API < 29")
             val fileName = System.currentTimeMillis().toString() + ".png"
-            val file = File(directory, fileName)
+            val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName)
             saveImageToStream(bitmap, FileOutputStream(file))
+            Log.i(">>>", "file - $file")
             val values = contentValues()
             values.put(MediaStore.Images.Media.DATA, file.absolutePath)
             // .DATA is deprecated in API 29

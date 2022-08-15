@@ -48,7 +48,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
             }
         }
 
-    private val requestStoragePermissionLauncher = registerForActivityResult(
+    private val requestReadStoragePermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
@@ -56,6 +56,16 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
             showImages()
         } else {
             Log.i(">>>", "Read Permission Denied")
+        }
+    }
+
+    private val requestWriteStoragePermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            Log.i(">>>", "Write Permission Granted")
+        } else {
+            Log.i(">>>", "Write Permission Denied")
         }
     }
 
@@ -83,7 +93,8 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requestStoragePermission()
+        requestReadStoragePermission()
+        requestWriteStoragePermission()
         observeViewModel()
         setViews()
     }
@@ -111,7 +122,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
             gridLayoutManager.spanSizeLookup = spanSize
             rvGallery.layoutManager = gridLayoutManager
             rvGallery.adapter = galleryAdapter
-            openAlbum.setOnClickListener { requestStoragePermission() }
+            openAlbum.setOnClickListener { requestReadStoragePermission() }
             fab.setOnClickListener { checkCameraHardware(requireContext()) }
         }
     }
@@ -181,7 +192,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
         }
     }
 
-    private fun requestStoragePermission() {
+    private fun requestReadStoragePermission() {
         when {
             ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -196,11 +207,34 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) -> {
                 Log.i(">>>", "Should Show Request Permission Rationale")
-                requestStoragePermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                requestReadStoragePermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             }
 
             else -> {
-                requestStoragePermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                requestReadStoragePermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
+        }
+    }
+
+    private fun requestWriteStoragePermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                Log.i(">>>", "Check Self Write Permission")
+            }
+
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) -> {
+                Log.i(">>>", "Should Show Request Write Permission Rationale")
+                requestWriteStoragePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+
+            else -> {
+                requestWriteStoragePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             }
         }
     }

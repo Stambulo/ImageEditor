@@ -1,9 +1,12 @@
 package com.stambulo.milestone3.presentation.fragments
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +23,8 @@ import com.stambulo.milestone3.presentation.states.EditingState
 import com.stambulo.milestone3.presentation.viewmodels.EditingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileInputStream
 
 @AndroidEntryPoint
 class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
@@ -54,16 +59,17 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
         setOnClickListener()
     }
 
-    private fun setViews(){
+    private fun setViews() {
         binding.apply {
             confirmButton.setOnClickListener {
                 Toast.makeText(requireContext(), "Confirm", Toast.LENGTH_LONG).show()
 //                viewModel.repository.saveImage(getAdjustedBitmap(), requireContext(), "Milestone3")
+                getAdjustedBitmap()
             }
             contrastSlider.addOnChangeListener { _, value, _ ->
                 bitmapContrast = value
                 editImage.setColorFilter(getContrastBrightnessFilter(value, bitmapBrightness))
-                contrastValue.text = ((value*100)-100).toInt().toString()
+                contrastValue.text = ((value * 100) - 100).toInt().toString()
             }
             brightnessSlider.addOnChangeListener { _, value, _ ->
                 bitmapBrightness = value
@@ -82,7 +88,10 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
         }
     }
 
-    private fun getContrastBrightnessFilter(contrast: Float, brightness: Float): ColorMatrixColorFilter {
+    private fun getContrastBrightnessFilter(
+        contrast: Float,
+        brightness: Float
+    ): ColorMatrixColorFilter {
         val cm = ColorMatrix(
             floatArrayOf(
                 contrast, 0f, 0f, 0f, brightness,
@@ -94,14 +103,21 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
         return ColorMatrixColorFilter(cm)
     }
 
-//    private fun getAdjustedBitmap(): Bitmap{
-//        val fileName = imageName
-//        val file = File(fileName)
-//        val bmp = BitmapFactory.decodeFile(file.toString())
-//        Log.i(">>>", imageName)
-//        Log.i(">>>", "$bmp")
-//        return bmp
-//    }
+    private fun getAdjustedBitmap(): Bitmap? {
+        var bitmap: Bitmap? = null
+        val fileName = "Pictures/Milestone3/1.png"
+        val file: File = File(fileName)
+        Log.i(">>>", "imageName  -  $file")
+        try {
+            val options = BitmapFactory.Options()
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888
+            bitmap = BitmapFactory.decodeStream(FileInputStream(file), null, options)
+        } catch (e: Exception) {
+            Log.i(">>>", "catch !!!  -  $e")
+        }
+        Log.i(">>>", "bitmap - $bitmap")
+        return bitmap
+    }
 
     override fun setupViewModel() {
         binding.progressBar.isVisible = true
@@ -112,11 +128,15 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
 
     override fun observeViewModel() {
         lifecycleScope.launch {
-            viewModel.editingState.collect{
+            viewModel.editingState.collect {
                 when (it.type) {
                     EditingState.Type.IDLE -> {}
-                    EditingState.Type.Loading -> { renderLoading() }
-                    EditingState.Type.ShowImage -> { showImage() }
+                    EditingState.Type.Loading -> {
+                        renderLoading()
+                    }
+                    EditingState.Type.ShowImage -> {
+                        showImage()
+                    }
                 }
             }
         }
@@ -131,7 +151,7 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
         imageLoader.loadInto(imageName, binding.editImage)
     }
 
-    private fun setOnClickListener(){
+    private fun setOnClickListener() {
         binding.backChevron.setOnClickListener {
             goToGalleryFragment()
         }
