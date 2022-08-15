@@ -1,11 +1,14 @@
 package com.stambulo.milestone3.presentation.fragments
 
 import android.content.Context
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,13 +26,12 @@ import com.stambulo.milestone3.presentation.states.EditingState
 import com.stambulo.milestone3.presentation.viewmodels.EditingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.io.File
 import java.io.FileInputStream
 
 @AndroidEntryPoint
 class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
     private val viewModel: EditingViewModel by viewModels()
-    private lateinit var imageName: String
+    private lateinit var imageName: Uri
     private var bitmapContrast = 1F
     private var bitmapBrightness = 0F
 
@@ -52,7 +54,7 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        imageName = arguments?.getString("imageName") ?: "no file name"
+        imageName = Uri.parse(Uri.decode(arguments?.getString("imageName") ?: "no file name"))
         setViews()
         setupViewModel()
         observeViewModel()
@@ -105,9 +107,7 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
 
     private fun getAdjustedBitmap(): Bitmap? {
         var bitmap: Bitmap? = null
-        val fileName = "Pictures/Milestone3/1.png"
-        val file: File = File(fileName)
-        Log.i(">>>", "imageName  -  $file")
+        val file = getRealPathFromURI(imageName)
         try {
             val options = BitmapFactory.Options()
             options.inPreferredConfig = Bitmap.Config.ARGB_8888
@@ -117,6 +117,21 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
         }
         Log.i(">>>", "bitmap - $bitmap")
         return bitmap
+    }
+
+    private fun getRealPathFromURI(contentUri: Uri?): String? {
+        var res: String? = null
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor: Cursor? =
+            contentUri?.let { requireContext().getContentResolver().query(it, proj, null, null, null) }
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                res = cursor.getString(columnIndex)
+            }
+        }
+        cursor?.close()
+        return res
     }
 
     override fun setupViewModel() {

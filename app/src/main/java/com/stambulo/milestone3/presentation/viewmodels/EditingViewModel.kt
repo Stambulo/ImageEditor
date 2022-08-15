@@ -1,5 +1,6 @@
 package com.stambulo.milestone3.presentation.viewmodels
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.stambulo.milestone3.presentation.intents.EditingIntent
 import com.stambulo.milestone3.presentation.states.EditingState
@@ -13,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class EditingViewModel @Inject constructor() : BaseViewModel<EditingIntent>() {
 
-    private val _editingState = MutableStateFlow(EditingState(EditingState.Type.IDLE, ""))
+    private val _editingState = MutableStateFlow(EditingState(EditingState.Type.IDLE, Uri.EMPTY))
     val editingState: StateFlow<EditingState> get() = _editingState
 
     init {
@@ -32,8 +33,8 @@ class EditingViewModel @Inject constructor() : BaseViewModel<EditingIntent>() {
         }
     }
 
-    private fun showImage(imageName: String) {
-        _editingState.value = EditingState(EditingState.Type.Loading, "")
+    private fun showImage(imageName: Uri) {
+        _editingState.value = EditingState(EditingState.Type.Loading, Uri.EMPTY)
         _editingState.value = EditingState(EditingState.Type.ShowImage, imageName)
     }
 }

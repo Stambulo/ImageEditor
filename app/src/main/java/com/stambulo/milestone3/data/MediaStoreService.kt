@@ -112,11 +112,11 @@ class MediaStoreService(private val application: Context) : IMediaStoreService {
                 context.contentResolver.update(uri, values, null, null)
             }
         } else {
-            Log.i(">>>", "Android API < 29")
             val fileName = System.currentTimeMillis().toString() + ".png"
-            val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName)
+            val path = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES + File.separator + folderName)
+            val file = File(path, fileName)
             saveImageToStream(bitmap, FileOutputStream(file))
-            Log.i(">>>", "file - $file")
             val values = contentValues()
             values.put(MediaStore.Images.Media.DATA, file.absolutePath)
             // .DATA is deprecated in API 29
