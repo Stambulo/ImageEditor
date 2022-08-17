@@ -1,15 +1,8 @@
 package com.stambulo.milestone3.presentation.fragments
 
 import android.content.Context
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,14 +19,11 @@ import com.stambulo.milestone3.presentation.states.EditingState
 import com.stambulo.milestone3.presentation.viewmodels.EditingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.io.FileInputStream
 
 @AndroidEntryPoint
 class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
     private val viewModel: EditingViewModel by viewModels()
     private lateinit var imageName: Uri
-    private var bitmapContrast = 1F
-    private var bitmapBrightness = 0F
 
     override fun inflateMethod(
         inflater: LayoutInflater,
@@ -64,18 +54,20 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
     private fun setViews() {
         binding.apply {
             confirmButton.setOnClickListener {
-                Toast.makeText(requireContext(), "Confirm", Toast.LENGTH_LONG).show()
-//                viewModel.repository.saveImage(getAdjustedBitmap(), requireContext(), "Milestone3")
-                getAdjustedBitmap()
+                val bitmap = getBitmapOfSelectedImage(imageName)
+                if (bitmap != null) {
+                    val adjustedBitmap = implementFilterToBitmap(bitmap, colorMatrix)
+                    viewModel.repository.saveImage(adjustedBitmap, requireContext(), "Milestone3")
+                }
             }
             contrastSlider.addOnChangeListener { _, value, _ ->
                 bitmapContrast = value
-                editImage.setColorFilter(getContrastBrightnessFilter(value, bitmapBrightness))
+                editImage.colorFilter = setContrastBrightnessFilter(value, bitmapBrightness)
                 contrastValue.text = ((value * 100) - 100).toInt().toString()
             }
             brightnessSlider.addOnChangeListener { _, value, _ ->
                 bitmapBrightness = value
-                editImage.setColorFilter(getContrastBrightnessFilter(bitmapContrast, value))
+                editImage.colorFilter = setContrastBrightnessFilter(bitmapContrast, value)
                 brightnessValue.text = (value).toInt().toString()
             }
             monochromeSlider.addOnChangeListener { _, value, _ ->
@@ -88,50 +80,6 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
                 Toast.makeText(requireContext(), value.toString(), Toast.LENGTH_LONG).show()
             }
         }
-    }
-
-    private fun getContrastBrightnessFilter(
-        contrast: Float,
-        brightness: Float
-    ): ColorMatrixColorFilter {
-        val cm = ColorMatrix(
-            floatArrayOf(
-                contrast, 0f, 0f, 0f, brightness,
-                0f, contrast, 0f, 0f, brightness,
-                0f, 0f, contrast, 0f, brightness,
-                0f, 0f, 0f, 1f, 0f
-            )
-        )
-        return ColorMatrixColorFilter(cm)
-    }
-
-    private fun getAdjustedBitmap(): Bitmap? {
-        var bitmap: Bitmap? = null
-        val file = getRealPathFromURI(imageName)
-        try {
-            val options = BitmapFactory.Options()
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888
-            bitmap = BitmapFactory.decodeStream(FileInputStream(file), null, options)
-        } catch (e: Exception) {
-            Log.i(">>>", "catch !!!  -  $e")
-        }
-        Log.i(">>>", "bitmap - $bitmap")
-        return bitmap
-    }
-
-    private fun getRealPathFromURI(contentUri: Uri?): String? {
-        var res: String? = null
-        val proj = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor: Cursor? =
-            contentUri?.let { requireContext().getContentResolver().query(it, proj, null, null, null) }
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-                res = cursor.getString(columnIndex)
-            }
-        }
-        cursor?.close()
-        return res
     }
 
     override fun setupViewModel() {
