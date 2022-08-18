@@ -16,9 +16,11 @@ import com.stambulo.milestone3.R
 import com.stambulo.milestone3.databinding.FragmentImageEditingBinding
 import com.stambulo.milestone3.presentation.intents.EditingIntent
 import com.stambulo.milestone3.presentation.states.EditingState
+import com.stambulo.milestone3.presentation.util.sepia
 import com.stambulo.milestone3.presentation.viewmodels.EditingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
@@ -57,24 +59,27 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
                 val bitmap = getBitmapOfSelectedImage(imageName)
                 if (bitmap != null) {
                     val adjustedBitmap = implementFilterToBitmap(bitmap, colorMatrix)
-                    viewModel.repository.saveImage(adjustedBitmap, requireContext(), "Milestone3")
+                    adjustedBitmap.sepia(sepiaLevel)?.let { bmp ->
+                        viewModel.repository.saveImage(bmp, requireContext(), "Milestone3")
+                    }
                 }
             }
             contrastSlider.addOnChangeListener { _, value, _ ->
-                bitmapContrast = value
-                editImage.colorFilter = setContrastBrightnessFilter(value, bitmapBrightness)
+                contrastLevel = value
+                editImage.colorFilter = setContrastBrightnessFilter(value, brightnessLevel)
                 contrastValue.text = ((value * 100) - 100).toInt().toString()
             }
             brightnessSlider.addOnChangeListener { _, value, _ ->
-                bitmapBrightness = value
-                editImage.colorFilter = setContrastBrightnessFilter(bitmapContrast, value)
+                brightnessLevel = value
+                editImage.colorFilter = setContrastBrightnessFilter(contrastLevel, value)
                 brightnessValue.text = (value).toInt().toString()
             }
             monochromeSlider.addOnChangeListener { _, value, _ ->
                 Toast.makeText(requireContext(), value.toString(), Toast.LENGTH_LONG).show()
             }
             sepiaSlider.addOnChangeListener { _, value, _ ->
-                Toast.makeText(requireContext(), value.toString(), Toast.LENGTH_LONG).show()
+                sepiaLevel = value.roundToInt()
+                editImage.setImageBitmap(getBitmapOfSelectedImage(imageName)?.sepia(sepiaLevel))
             }
             vignetteSlider.addOnChangeListener { _, value, _ ->
                 Toast.makeText(requireContext(), value.toString(), Toast.LENGTH_LONG).show()

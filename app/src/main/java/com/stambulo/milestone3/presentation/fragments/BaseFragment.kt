@@ -17,8 +17,13 @@ import java.io.FileInputStream
 import javax.inject.Inject
 
 abstract class BaseFragment<Binding : ViewBinding> : Fragment() {
-    protected var bitmapContrast = 1F
-    protected var bitmapBrightness = 0F
+    @Inject
+    lateinit var imageLoader: IImageLoader<ImageView>
+    private var _binding: Binding? = null
+    val binding: Binding get() = _binding ?: throw NullPointerException()
+    protected var contrastLevel = 1F
+    protected var brightnessLevel = 0F
+    protected var sepiaLevel = 0
     protected var colorMatrix = ColorMatrix(
         floatArrayOf(
             1f, 0f, 0f, 0f, 1f,
@@ -27,11 +32,6 @@ abstract class BaseFragment<Binding : ViewBinding> : Fragment() {
             0f, 0f, 0f, 1f, 0f
         )
     )
-
-    @Inject
-    lateinit var imageLoader: IImageLoader<ImageView>
-    private var _binding: Binding? = null
-    val binding: Binding get() = _binding ?: throw NullPointerException()
 
     abstract fun inflateMethod(inflater: LayoutInflater, viewGroup: ViewGroup?): Binding
     abstract fun setupViewModel()
@@ -89,7 +89,7 @@ abstract class BaseFragment<Binding : ViewBinding> : Fragment() {
         return bmp
     }
 
-    fun getRealPathFromURI(contentUri: Uri?): String? {
+    private fun getRealPathFromURI(contentUri: Uri?): String? {
         var res: String? = null
         val proj = arrayOf(MediaStore.Images.Media.DATA)
         val cursor: Cursor? =
