@@ -3,6 +3,7 @@ package com.stambulo.milestone3.presentation.fragments
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.stambulo.milestone3.databinding.FragmentImageEditingBinding
 import com.stambulo.milestone3.presentation.intents.EditingIntent
 import com.stambulo.milestone3.presentation.states.EditingState
 import com.stambulo.milestone3.presentation.util.sepia
+import com.stambulo.milestone3.presentation.util.toBlackWhite
 import com.stambulo.milestone3.presentation.viewmodels.EditingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -60,6 +62,7 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
                 if (bitmap != null) {
                     val adjustedBitmap = implementFilterToBitmap(bitmap, colorMatrix)
                     adjustedBitmap.sepia(sepiaLevel)?.let { bmp ->
+                        bmp.toBlackWhite(monochromeLevel)
                         viewModel.repository.saveImage(bmp, requireContext(), "Milestone3")
                     }
                 }
@@ -75,7 +78,8 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
                 brightnessValue.text = (value).toInt().toString()
             }
             monochromeSlider.addOnChangeListener { _, value, _ ->
-                Toast.makeText(requireContext(), value.toString(), Toast.LENGTH_LONG).show()
+                monochromeLevel = value.roundToInt()
+                editImage.setImageBitmap(getBitmapOfSelectedImage(imageName)?.toBlackWhite(monochromeLevel))
             }
             sepiaSlider.addOnChangeListener { _, value, _ ->
                 sepiaLevel = value.roundToInt()
