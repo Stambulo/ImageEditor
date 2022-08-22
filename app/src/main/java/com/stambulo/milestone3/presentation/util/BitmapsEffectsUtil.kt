@@ -2,6 +2,72 @@ package com.stambulo.milestone3.presentation.util
 
 import android.graphics.*
 
+// extension function Vignette
+fun Bitmap.vignette(threshold:Int = 128):Bitmap?{
+    val bitmap = copy(config,true)
+    val width: Int = bitmap.width
+    val height: Int = bitmap.height
+    val tenthLeftRight: Int = width / 5
+    val tenthTopBottom: Int = height / 5
+    val canvas = Canvas(bitmap)
+    canvas.drawBitmap(bitmap, 0f, 0f, null)
+
+    // Gradient left - right
+    val linGradLR: Shader = LinearGradient(
+        0f, (height / 2).toFloat(), (tenthLeftRight / 2).toFloat(), (height / 2).toFloat(),
+        Color.BLACK, Color.TRANSPARENT, Shader.TileMode.CLAMP
+    )
+
+    // Gradient top - bottom
+    val linGradTB: Shader = LinearGradient(
+        (width / 20).toFloat(), 0f, (width / 2).toFloat(), tenthTopBottom.toFloat(), Color.BLACK,
+        Color.TRANSPARENT, Shader.TileMode.CLAMP
+    )
+
+    // Gradient right - left
+    val linGradRL: Shader = LinearGradient(
+        width.toFloat(), (height / 2).toFloat(),
+        (width - tenthLeftRight).toFloat(),
+        (height / 2).toFloat(), Color.BLACK, Color.TRANSPARENT, Shader.TileMode.CLAMP
+    )
+
+    // Gradient bottom - top
+    val linGradBT: Shader = LinearGradient(
+        (width / 2).toFloat(), height.toFloat(), (width / 2).toFloat(),
+        height - tenthTopBottom.toFloat(), Color.BLACK, Color.TRANSPARENT, Shader.TileMode.CLAMP
+    )
+
+    val paint = Paint()
+    paint.shader = linGradLR
+    paint.isAntiAlias = true
+    paint.isDither = true
+    paint.alpha = threshold
+
+    // Rect for Grad left - right
+    var rect = Rect(0, 0, tenthLeftRight, height)
+    var rectf = RectF(rect)
+    canvas.drawRect(rectf, paint)
+
+    // Rect for Grad top - bottom
+    paint.shader = linGradTB
+    rect = Rect(0, 0, width, tenthTopBottom)
+    rectf = RectF(rect)
+    canvas.drawRect(rectf, paint)
+
+    // Rect for Grad right - left
+    paint.shader = linGradRL
+    rect = Rect(width, 0, width - tenthLeftRight, height)
+    rectf = RectF(rect)
+    canvas.drawRect(rectf, paint)
+
+    // Rect for Grad bottom - top
+    paint.shader = linGradBT
+    rect = Rect(0, height - tenthTopBottom, width, height)
+    rectf = RectF(rect)
+    canvas.drawRect(rectf, paint)
+    return bitmap
+}
+
 // extension function to convert bitmap to black and white
 fun Bitmap.toBlackWhite(threshold:Int = 128):Bitmap?{
     val bitmap = copy(config,true)

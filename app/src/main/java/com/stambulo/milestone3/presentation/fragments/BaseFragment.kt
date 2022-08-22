@@ -25,6 +25,7 @@ abstract class BaseFragment<Binding : ViewBinding> : Fragment() {
     protected var brightnessLevel = 0F
     protected var monochromeLevel = 128
     protected var sepiaLevel = 0
+    protected var vignetteLevel = 0
     protected var colorMatrix = ColorMatrix(
         floatArrayOf(
             1f, 0f, 0f, 0f, 1f,
