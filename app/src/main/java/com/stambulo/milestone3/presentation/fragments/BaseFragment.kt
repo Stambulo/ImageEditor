@@ -23,9 +23,6 @@ abstract class BaseFragment<Binding : ViewBinding> : Fragment() {
     val binding: Binding get() = _binding ?: throw NullPointerException()
     protected var contrastLevel = 1F
     protected var brightnessLevel = 0F
-    protected var monochromeLevel = 128
-    protected var sepiaLevel = 0
-    protected var vignetteLevel = 0
     protected var colorMatrix = ColorMatrix(
         floatArrayOf(
             1f, 0f, 0f, 0f, 1f,

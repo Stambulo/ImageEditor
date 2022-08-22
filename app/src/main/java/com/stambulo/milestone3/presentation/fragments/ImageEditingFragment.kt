@@ -82,22 +82,19 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
                 bitmapOut = bmp
             }
             monochromeSlider.addOnChangeListener { _, value, _ ->
-                monochromeLevel = value.roundToInt()
-                val bmp = bitmapIn?.toBlackWhite(monochromeLevel)
+                val bmp = bitmapIn?.toBlackWhite(value.roundToInt())
                 editImage.setImageBitmap(bmp)
                 monochromeValue.text = (value).toInt().toString()
                 bitmapOut = bmp
             }
             sepiaSlider.addOnChangeListener { _, value, _ ->
-                sepiaLevel = value.roundToInt()
-                val bmp = bitmapIn?.sepia(sepiaLevel)
+                val bmp = bitmapIn?.sepia(value.roundToInt())
                 editImage.setImageBitmap(bmp)
                 sepiaValue.text = (value).toInt().toString()
                 bitmapOut = bmp
             }
             vignetteSlider.addOnChangeListener { _, value, _ ->
-                vignetteLevel = value.roundToInt()
-                val bmp = bitmapIn?.vignette(vignetteLevel)
+                val bmp = bitmapIn?.vignette(value.roundToInt())
                 editImage.setImageBitmap(bmp)
                 vignetteValue.text = (value).toInt().toString()
                 bitmapOut = bmp
