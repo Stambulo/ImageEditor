@@ -1,5 +1,6 @@
 package com.stambulo.milestone3.presentation.fragments
 
+import android.content.Intent
 import android.database.Cursor
 import android.graphics.*
 import android.net.Uri
@@ -10,10 +11,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.stambulo.milestone3.presentation.image.IImageLoader
-import java.io.FileInputStream
+import java.io.*
 import javax.inject.Inject
 
 abstract class BaseFragment<Binding : ViewBinding> : Fragment() {
@@ -62,6 +64,41 @@ abstract class BaseFragment<Binding : ViewBinding> : Fragment() {
         )
         colorMatrix = cm
         return ColorMatrixColorFilter(cm)
+    }
+
+    // Extension function to share save bitmap in cache directory and share
+    fun shareCacheDirBitmap(uri: Uri){
+        val fis = FileInputStream(uri.path)  // 2nd line
+        val bitmap = BitmapFactory.decodeStream(fis)
+        fis.close()
+
+        try {
+            val file = File("${requireActivity().cacheDir}/image.png")
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, FileOutputStream(file))
+            val contentUri = FileProvider.getUriForFile(requireActivity(), requireActivity().packageName + ".provider", file)
+
+            val shareIntent = Intent()
+            shareIntent.action = Intent.ACTION_SEND
+            shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
+            shareIntent.type = "image/*"
+            this.startActivity(Intent.createChooser(shareIntent, "Share Image"))
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
+    }
+
+    fun getUriFromBitmap(bmp: Bitmap?): Uri? {
+        var bmpUri: Uri? = null
+        try {
+            val file = File(requireActivity().externalCacheDir, System.currentTimeMillis().toString() + ".jpg")
+            val out = FileOutputStream(file)
+            bmp?.compress(Bitmap.CompressFormat.JPEG, 90, out)
+            out.close()
+            bmpUri = Uri.parse(file.absolutePath)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return bmpUri
     }
 
     fun getBitmapOfSelectedImage(imageName: Uri): Bitmap? {

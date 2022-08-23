@@ -17,6 +17,7 @@ import com.stambulo.milestone3.R
 import com.stambulo.milestone3.databinding.FragmentImageEditingBinding
 import com.stambulo.milestone3.presentation.intents.EditingIntent
 import com.stambulo.milestone3.presentation.states.EditingState
+import com.stambulo.milestone3.presentation.util.saveToInternalStorage
 import com.stambulo.milestone3.presentation.util.sepia
 import com.stambulo.milestone3.presentation.util.toBlackWhite
 import com.stambulo.milestone3.presentation.util.vignette
@@ -61,6 +62,12 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
 
     private fun setViews() {
         binding.apply {
+            shareButton.setOnClickListener {
+                val uri = bitmapIn?.saveToInternalStorage(requireContext())
+                if (uri != null) {
+                    shareCacheDirBitmap(uri)
+                }
+            }
             confirmButton.setOnClickListener {
                 bitmapIn = bitmapOut
                 savingDialog()
@@ -85,19 +92,25 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
                 val bmp = bitmapIn?.toBlackWhite(value.roundToInt())
                 editImage.setImageBitmap(bmp)
                 monochromeValue.text = (value).toInt().toString()
-                bitmapOut = bmp
+                if (bmp != null) {
+                    bitmapOut = bmp
+                }
             }
             sepiaSlider.addOnChangeListener { _, value, _ ->
                 val bmp = bitmapIn?.sepia(value.roundToInt())
                 editImage.setImageBitmap(bmp)
                 sepiaValue.text = (value).toInt().toString()
-                bitmapOut = bmp
+                if (bmp != null) {
+                    bitmapOut = bmp
+                }
             }
             vignetteSlider.addOnChangeListener { _, value, _ ->
                 val bmp = bitmapIn?.vignette(value.roundToInt())
                 editImage.setImageBitmap(bmp)
                 vignetteValue.text = (value).toInt().toString()
-                bitmapOut = bmp
+                if (bmp != null) {
+                    bitmapOut = bmp
+                }
             }
         }
     }
@@ -140,7 +153,7 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
         }
     }
 
-    private fun savingDialog(){
+    private fun savingDialog() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Save Dialog")
         builder.setMessage("Save Image in storage ?")
