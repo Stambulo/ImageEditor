@@ -1,6 +1,5 @@
 package com.stambulo.milestone3.presentation.fragments
 
-import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
@@ -18,13 +17,9 @@ import com.stambulo.milestone3.databinding.FragmentImageEditingBinding
 import com.stambulo.milestone3.presentation.intents.EditingIntent
 import com.stambulo.milestone3.presentation.states.EditingState
 import com.stambulo.milestone3.presentation.util.saveToInternalStorage
-import com.stambulo.milestone3.presentation.util.sepia
-import com.stambulo.milestone3.presentation.util.toBlackWhite
-import com.stambulo.milestone3.presentation.util.vignette
 import com.stambulo.milestone3.presentation.viewmodels.EditingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
@@ -68,50 +63,6 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
                     shareCacheDirBitmap(uri)
                 }
             }
-            confirmButton.setOnClickListener {
-                bitmapIn = bitmapOut
-                savingDialog()
-            }
-            contrastSlider.addOnChangeListener { _, value, _ ->
-                contrastLevel = value
-                setContrastBrightnessFilter(value, brightnessLevel)
-                val bmp = bitmapIn?.let { implementFilterToBitmap(it, colorMatrix) }
-                editImage.setImageBitmap(bmp)
-                contrastValue.text = ((value * 100) - 100).toInt().toString()
-                bitmapOut = bmp
-            }
-            brightnessSlider.addOnChangeListener { _, value, _ ->
-                brightnessLevel = value
-                setContrastBrightnessFilter(contrastLevel, value)
-                val bmp = bitmapIn?.let { implementFilterToBitmap(it, colorMatrix) }
-                editImage.setImageBitmap(bmp)
-                brightnessValue.text = (value).toInt().toString()
-                bitmapOut = bmp
-            }
-            monochromeSlider.addOnChangeListener { _, value, _ ->
-                val bmp = bitmapIn?.toBlackWhite(value.roundToInt())
-                editImage.setImageBitmap(bmp)
-                monochromeValue.text = (value).toInt().toString()
-                if (bmp != null) {
-                    bitmapOut = bmp
-                }
-            }
-            sepiaSlider.addOnChangeListener { _, value, _ ->
-                val bmp = bitmapIn?.sepia(value.roundToInt())
-                editImage.setImageBitmap(bmp)
-                sepiaValue.text = (value).toInt().toString()
-                if (bmp != null) {
-                    bitmapOut = bmp
-                }
-            }
-            vignetteSlider.addOnChangeListener { _, value, _ ->
-                val bmp = bitmapIn?.vignette(value.roundToInt())
-                editImage.setImageBitmap(bmp)
-                vignetteValue.text = (value).toInt().toString()
-                if (bmp != null) {
-                    bitmapOut = bmp
-                }
-            }
         }
     }
 
@@ -151,20 +102,6 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
         binding.backChevron.setOnClickListener {
             goToGalleryFragment()
         }
-    }
-
-    private fun savingDialog() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Save Dialog")
-        builder.setMessage("Save Image in storage ?")
-        builder.setPositiveButton("Save"){ _, _ ->
-            bitmapOut?.let { bmp ->
-                viewModel.repository.saveImage(bmp, requireContext(), "Milestone3")
-            }
-        }
-        builder.setNegativeButton("Cancel") { _, _ -> }
-        builder.setNeutralButton("Proceed Editing") { _, _ -> }
-        builder.show()
     }
 
     private fun goToGalleryFragment() {

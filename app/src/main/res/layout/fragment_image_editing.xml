@@ -30,194 +30,146 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_12sdp"
         android:src="@drawable/ic_share"
-        app:layout_constraintEnd_toStartOf="@id/confirm_button"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/confirm_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_12sdp"
-        android:src="@drawable/ic_check"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/edit_image"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/main_card_view"
         android:layout_width="@dimen/_276sdp"
-        android:layout_height="@dimen/_267sdp"
+        android:layout_height="@dimen/_280sdp"
+        android:layout_marginVertical="@dimen/_24sdp"
+        app:cardCornerRadius="@dimen/_8sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/back_chevron">
+
+        <ImageView
+            android:id="@+id/edit_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/label_picture_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_18sdp"
+        app:layout_constraintTop_toBottomOf="@id/main_card_view"
+        app:layout_constraintStart_toStartOf="@id/main_card_view"
+        android:textSize="@dimen/_14ssp"
+        android:textColor="@color/white"
+        android:text="@string/label_picture_name"/>
+
+    <TextView
+        android:id="@+id/picture_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_18sdp"
+        android:layout_marginStart="@dimen/_4sdp"
+        app:layout_constraintTop_toBottomOf="@id/main_card_view"
+        app:layout_constraintStart_toEndOf="@id/label_picture_name"
+        android:textSize="@dimen/_14ssp"
+        android:textColor="@color/white"
+        android:text="@string/picture_name"/>
+
+    <TextView
+        android:id="@+id/label_filters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_12sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/back_chevron" />
-
-    <!--    Contrast Slider     -->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/_12sdp"
-        android:text="@string/contrast"
-        android:textColor="@color/delimiter_color_767676"
+        app:layout_constraintTop_toBottomOf="@id/label_picture_name"
+        app:layout_constraintStart_toStartOf="@id/main_card_view"
         android:textSize="@dimen/_14ssp"
+        android:textColor="@color/white"
+        android:text="@string/label_filters"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:orientation="horizontal"
         android:layout_marginTop="@dimen/_12sdp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_image" />
+        app:layout_constraintTop_toBottomOf="@id/label_filters"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <TextView
-        android:id="@+id/contrast_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/_12sdp"
-        android:text="@string/zero_slider_initial_position"
-        android:textColor="@color/delimiter_color_767676"
-        android:textSize="@dimen/_14ssp"
-        android:layout_marginTop="@dimen/_12sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_image" />
+        <LinearLayout
+            android:layout_weight="0.25"
+            android:layout_width="0px"
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/_4sdp">
+            <ImageView
+                android:id="@+id/filter_struck"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_80sdp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_6sdp"
+                android:text="@string/struck"
+                android:textColor="@color/white"/>
+        </LinearLayout>
 
-    <com.google.android.material.slider.Slider
-        android:id="@+id/contrast_slider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/_20sdp"
-        android:value="1.0"
-        android:valueFrom="0.0"
-        android:valueTo="2.0"
-        app:labelBehavior="gone"
-        app:layout_constraintTop_toBottomOf="@id/edit_image" />
+        <LinearLayout
+            android:layout_weight="0.25"
+            android:layout_width="0px"
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/_4sdp">
+            <ImageView
+                android:id="@+id/filter_clarendon"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_80sdp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_6sdp"
+                android:text="@string/clarendon"
+                android:textColor="@color/white"/>
+        </LinearLayout>
 
-    <!--    Brightness Slider     -->
+        <LinearLayout
+            android:layout_weight="0.25"
+            android:layout_width="0px"
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/_4sdp">
+            <ImageView
+                android:id="@+id/filter_OldMan"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_80sdp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_6sdp"
+                android:text="@string/oldman"
+                android:textColor="@color/white"/>
+        </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/_12sdp"
-        android:text="@string/brightness"
-        android:textColor="@color/delimiter_color_767676"
-        android:textSize="@dimen/_14ssp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/contrast_slider" />
+        <LinearLayout
+            android:layout_weight="0.25"
+            android:layout_width="0px"
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/_4sdp">
+            <ImageView
+                android:id="@+id/filter_mars"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_80sdp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_6sdp"
+                android:text="@string/mars"
+                android:textColor="@color/white"/>
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/brightness_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/_12sdp"
-        android:text="@string/zero_slider_initial_position"
-        android:textColor="@color/delimiter_color_767676"
-        android:textSize="@dimen/_14ssp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/contrast_slider" />
-
-    <com.google.android.material.slider.Slider
-        android:id="@+id/brightness_slider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/_8sdp"
-        android:value="0.0"
-        android:valueFrom="-200.0"
-        android:valueTo="200.0"
-        app:labelBehavior="gone"
-        app:layout_constraintTop_toBottomOf="@id/contrast_slider" />
-
-    <!--    Monochrome Slider     -->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/_12sdp"
-        android:text="@string/monochrome"
-        android:textColor="@color/delimiter_color_767676"
-        android:textSize="@dimen/_14ssp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/brightness_slider" />
-
-    <TextView
-        android:id="@+id/monochrome_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/_12sdp"
-        android:text="@string/zero_slider_initial_position"
-        android:textColor="@color/delimiter_color_767676"
-        android:textSize="@dimen/_14ssp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/brightness_slider" />
-
-    <com.google.android.material.slider.Slider
-        android:id="@+id/monochrome_slider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/_8sdp"
-        android:value="0.0"
-        android:valueFrom="0.0"
-        android:valueTo="100.0"
-        app:layout_constraintTop_toBottomOf="@id/brightness_slider" />
-
-    <!--    Sepia Slider     -->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/_12sdp"
-        android:text="@string/sepia"
-        android:textColor="@color/delimiter_color_767676"
-        android:textSize="@dimen/_14ssp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/monochrome_slider" />
-
-    <TextView
-        android:id="@+id/sepia_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/_12sdp"
-        android:text="@string/zero_slider_initial_position"
-        android:textColor="@color/delimiter_color_767676"
-        android:textSize="@dimen/_14ssp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/monochrome_slider" />
-
-    <com.google.android.material.slider.Slider
-        android:id="@+id/sepia_slider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/_8sdp"
-        android:value="0.0"
-        android:valueFrom="-255.0"
-        android:valueTo="255.0"
-        app:layout_constraintTop_toBottomOf="@id/monochrome_slider" />
-
-    <!--    Vignette Slider     -->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/_12sdp"
-        android:text="@string/vignette"
-        android:textColor="@color/delimiter_color_767676"
-        android:textSize="@dimen/_14ssp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sepia_slider" />
-
-    <TextView
-        android:id="@+id/vignette_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/_12sdp"
-        android:text="@string/zero_slider_initial_position"
-        android:textColor="@color/delimiter_color_767676"
-        android:textSize="@dimen/_14ssp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sepia_slider" />
-
-    <com.google.android.material.slider.Slider
-        android:id="@+id/vignette_slider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/_8sdp"
-        android:value="0.0"
-        android:valueFrom="0.0"
-        android:valueTo="255.0"
-        app:layout_constraintTop_toBottomOf="@id/sepia_slider" />
-
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

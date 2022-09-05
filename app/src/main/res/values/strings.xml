@@ -14,4 +14,11 @@
     <string name="contrast">Contrast</string>
     <string name="gallery">Gallery</string>
     <string name="sepia">Sepia</string>
+    <string name="label_picture_name">Имя картинки:</string>
+    <string name="picture_name">123456</string>
+    <string name="label_filters">Фильтры:</string>
+    <string name="struck">Struck</string>
+    <string name="clarendon">Clarendon</string>
+    <string name="oldman">OldMan</string>
+    <string name="mars">Mars</string>
 </resources>
