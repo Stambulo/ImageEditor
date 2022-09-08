@@ -1,6 +1,7 @@
 package com.stambulo.milestone3.presentation.viewmodels
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -21,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GalleryViewModel @Inject constructor() : BaseViewModel<GalleryIntent>() {
 
-    private val _galleryState = MutableStateFlow(GalleryState(GalleryState.Type.IDLE, null))
+    private var _galleryState = MutableStateFlow(GalleryState(GalleryState.Type.IDLE, null))
     val galleryState: StateFlow<GalleryState> get() = _galleryState
 
     init {
@@ -31,6 +32,10 @@ class GalleryViewModel @Inject constructor() : BaseViewModel<GalleryIntent>() {
     val imagesWithPaging3: Flow<PagingData<MediaStoreImage>> = Pager(PagingConfig(pageSize = 300)) {
         GalleryPagingSource(repository)
     }.flow.cachedIn(viewModelScope)
+
+    fun refreshGallery(){
+        Log.i(">>>", "ViewModel - Refresh Gallery")
+    }
 
     private fun handleIntent() {
         viewModelScope.launch {

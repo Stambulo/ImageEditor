@@ -26,7 +26,12 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
     private val viewModel: EditingViewModel by viewModels()
     private lateinit var imageName: Uri
     private var bitmapIn: Bitmap? = null
-    private var bitmapOut: Bitmap? = null
+    private var previewBitmap: Bitmap? = null
+    private var smallPreviewBitmap: Bitmap? = null
+    private var struckFilterPreviewBitmap: Bitmap? = null
+    private var clarendonFilterPreviewBitmap: Bitmap? = null
+    private var oldManFilterPreviewBitmap: Bitmap? = null
+    private var marsFilterPreviewBitmap: Bitmap? = null
 
     override fun inflateMethod(
         inflater: LayoutInflater,
@@ -48,11 +53,22 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         imageName = Uri.parse(Uri.decode(arguments?.getString("imageName") ?: "no file name"))
-        bitmapIn = getBitmapOfSelectedImage(imageName)
         setViews()
         setupViewModel()
         observeViewModel()
         setOnClickListener()
+    }
+
+    private fun prepareFilters() {
+        bitmapIn = getBitmapOfSelectedImage(imageName)
+        previewBitmap = bitmapIn?.let { Bitmap.createScaledBitmap(it, 640, 480, false) }
+        smallPreviewBitmap =
+            previewBitmap?.let {Bitmap.createScaledBitmap(it, 140, 100, false)}
+
+        struckFilterPreviewBitmap = smallPreviewBitmap
+        clarendonFilterPreviewBitmap = smallPreviewBitmap
+        oldManFilterPreviewBitmap = smallPreviewBitmap
+        marsFilterPreviewBitmap = smallPreviewBitmap
     }
 
     private fun setViews() {
@@ -94,8 +110,16 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
     }
 
     private fun showImage() {
-        binding.progressBar.isVisible = false
-        imageLoader.loadInto(imageName, binding.editImage)
+        prepareFilters()
+//        imageLoader.loadInto(imageName, binding.editImage)
+        binding.apply {
+            progressBar.isVisible = false
+            editImage.setImageBitmap(previewBitmap)
+            filterStruck.setImageBitmap(struckFilterPreviewBitmap)
+            filterClarendon.setImageBitmap(clarendonFilterPreviewBitmap)
+            filterOldMan.setImageBitmap(oldManFilterPreviewBitmap)
+            filterMars.setImageBitmap(marsFilterPreviewBitmap)
+        }
     }
 
     private fun setOnClickListener() {
@@ -107,5 +131,17 @@ class ImageEditingFragment : BaseFragment<FragmentImageEditingBinding>() {
     private fun goToGalleryFragment() {
         Navigation.findNavController(requireActivity(), R.id.nav_host)
             .navigate(R.id.action_editingFragment_to_galleryFragment)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        bitmapIn?.recycle()
+        previewBitmap?.recycle()
+        struckFilterPreviewBitmap?.recycle()
+        smallPreviewBitmap?.recycle()
+        struckFilterPreviewBitmap?.recycle()
+        clarendonFilterPreviewBitmap?.recycle()
+        oldManFilterPreviewBitmap?.recycle()
+        marsFilterPreviewBitmap?.recycle()
     }
 }

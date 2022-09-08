@@ -26,8 +26,10 @@ import com.stambulo.milestone3.databinding.FragmentGalleryBinding
 import com.stambulo.milestone3.presentation.adapter.GalleryAdapter
 import com.stambulo.milestone3.presentation.intents.GalleryIntent
 import com.stambulo.milestone3.presentation.states.GalleryState
+import com.stambulo.milestone3.presentation.util.PhotoFileObserver
 import com.stambulo.milestone3.presentation.viewmodels.GalleryViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 private const val VIEW_TYPE_HEADER = 0
@@ -36,6 +38,7 @@ private const val VIEW_TYPE_HEADER = 0
 class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
     private val viewModel: GalleryViewModel by viewModels()
     private val galleryAdapter by lazy { GalleryAdapter(adapterClickListener) }
+    private lateinit var photoFileObserver: PhotoFileObserver
 
     private val adapterClickListener: GalleryAdapter.OnImageClickListener =
         object : GalleryAdapter.OnImageClickListener {
@@ -96,6 +99,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
         requestReadStoragePermission()
         requestWriteStoragePermission()
         observeViewModel()
+        setFileObserver()
         setViews()
     }
 
@@ -106,13 +110,23 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
         return FragmentGalleryBinding.inflate(inflater, viewGroup, false)
     }
 
+    fun refreshGallery(){
+        viewModel.refreshGallery()
+    }
+
     override fun setupViewModel() {
         binding.progressBar.isVisible = true
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.imagesWithPaging3.collect {
+            viewModel.imagesWithPaging3.collectLatest {
                 galleryAdapter.submitData(it)
             }
         }
+    }
+
+    private fun setFileObserver(){
+        photoFileObserver = PhotoFileObserver(
+            "/storage/emulated/0/Pictures/Milestone3/", this)
+        photoFileObserver.startWatching()
     }
 
     private fun setViews() {
@@ -251,5 +265,11 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>() {
                 else -> 1
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        photoFileObserver.close()
+        photoFileObserver.stopWatching()
     }
 }

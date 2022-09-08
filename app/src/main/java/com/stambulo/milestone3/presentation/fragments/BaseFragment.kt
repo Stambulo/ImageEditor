@@ -1,10 +1,13 @@
 package com.stambulo.milestone3.presentation.fragments
 
+import android.R
 import android.content.Intent
+import android.content.res.Resources
 import android.database.Cursor
 import android.graphics.*
 import android.net.Uri
 import android.os.Bundle
+import android.os.FileObserver
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
